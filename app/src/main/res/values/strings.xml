@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CleanArchApi</string>
+    <string name="all_info">all info</string>
+    <string name="favourite">favourite</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

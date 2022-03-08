@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/peopleListFragment">
+
+    <fragment
+        android:id="@+id/peopleListFragment"
+        android:name="com.sofiamarchinskya.cleanarchapi.presentation.view.PeopleListFragment"
+        android:label="fragment_people_list"
+        tools:layout="@layout/fragment_people_list">
+        <action
+            android:id="@+id/action_peopleListFragment_to_personDetailsFragment"
+            app:destination="@id/personDetailsFragment"
+            app:popUpTo="@+id/personDetailsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/personDetailsFragment"
+        android:name="com.sofiamarchinskya.cleanarchapi.presentation.view.PersonDetailsFragment"
+        android:label="fragment_person_details"
+        tools:layout="@layout/fragment_person_details" />
+</navigation>
