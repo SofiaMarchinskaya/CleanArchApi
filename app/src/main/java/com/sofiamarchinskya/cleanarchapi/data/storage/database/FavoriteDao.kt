@@ -18,4 +18,7 @@ interface FavoriteDao {
 
     @Query("SELECT * FROM favorite")
     fun getAllFavorite(): Flow<List<FavoriteEntity>>
+
+    @Query("SELECT * FROM favorite WHERE url = :url")
+    suspend fun getFavoriteByUrl(url: String): FavoriteEntity
 }

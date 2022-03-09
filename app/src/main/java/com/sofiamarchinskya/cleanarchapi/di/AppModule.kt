@@ -1,9 +1,8 @@
 package com.sofiamarchinskya.cleanarchapi.di
 
 import android.content.Context
-import androidx.room.PrimaryKey
 import androidx.room.Room
-import com.sofiamarchinskya.cleanarchapi.core.domain.CommonInteractor
+import com.sofiamarchinskya.cleanarchapi.core.domain.BaseInteractor
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.AppDatabase
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.*
 import dagger.Module
@@ -14,15 +13,15 @@ import javax.inject.Singleton
 class AppModule(private val context: Context) {
 
     @Provides
-    fun providePeopleListViewModelFactory(interactor: CommonInteractor): PeopleListViewModelFactory =
+    fun providePeopleListViewModelFactory(interactor: BaseInteractor): PeopleListViewModelFactory =
         PeopleListViewModelFactory(interactor)
 
     @Provides
-    fun providePersonDetailsViewModelFactory(interactor: CommonInteractor):PersonDetailsViewModelFactory =
+    fun providePersonDetailsViewModelFactory(interactor: BaseInteractor):PersonDetailsViewModelFactory =
         PersonDetailsViewModelFactory(interactor)
 
     @Provides
-    fun provideFavoritesListViewModelFactory(interactor: CommonInteractor):FavoritesListViewModelFactory =
+    fun provideFavoritesListViewModelFactory(interactor: BaseInteractor):FavoritesListViewModelFactory =
         FavoritesListViewModelFactory(interactor)
 
     @Provides

@@ -1,5 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
+import android.util.Log
 import com.sofiamarchinskya.cleanarchapi.core.domain.Mapper
 import com.sofiamarchinskya.cleanarchapi.data.net.PersonServerModel
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
@@ -10,6 +11,7 @@ import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -29,6 +31,12 @@ class StarWarsRepositoryImpl@Inject constructor(
 
     override suspend fun addPersonToFavorite(personModel:DomainPersonModel) {
         storage.insert(FavoriteEntity(url = personModel.url,name = personModel.name, height = personModel.height))
+        Log.d("Бык","данные пришли в репо  ${personModel.name}")
+    }
+
+    override suspend fun getFavoriteByUrl(url: String): DomainPersonModel {
+        val data = storage.getFavoriteByUrl(url)
+        return DomainPersonModel(name = data.name, height = data.height,url = data.url,isFavourite = true)
     }
 
     private fun mapProducts(personServerList: List<PersonServerModel>): List<DomainPersonModel> {

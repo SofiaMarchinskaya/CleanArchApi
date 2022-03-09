@@ -18,8 +18,7 @@ import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModelFactory
-import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
-import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 
@@ -40,14 +39,15 @@ class FavoritesListFragment : Fragment() {
         listAdapter = PeopleListAdapter(
             ::openAboutPersonFragment,
         )
-        binding.favoriteList.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.favoriteListMutable.observe(viewLifecycleOwner){
+        viewModel.allFavorites.observe(viewLifecycleOwner) {
             listAdapter.update(it)
-            Log.d("Бык","скачади список из бд ${it.size}")
+            Log.d("Бык","скачалось")
         }
+        binding.favoriteList.layoutManager = LinearLayoutManager(requireContext())
         binding.favoriteList.adapter = listAdapter
         return binding.root
     }
+
 
     private fun openAboutPersonFragment(data: DomainPersonModel) {
         view?.findNavController()?.navigate(

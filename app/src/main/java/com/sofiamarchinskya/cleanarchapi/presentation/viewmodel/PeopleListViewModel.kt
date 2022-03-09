@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sofiamarchinskya.cleanarchapi.core.domain.CommonInteractor
+import com.sofiamarchinskya.cleanarchapi.core.domain.BaseInteractor
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class PeopleListViewModel(private val interactor: CommonInteractor) : ViewModel() {
+class PeopleListViewModel(private val interactor: BaseInteractor) : ViewModel() {
+
    private val personListMutable = MutableLiveData<List<DomainPersonModel>>()
     val personList: LiveData<List<DomainPersonModel>> = personListMutable
 

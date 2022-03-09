@@ -9,4 +9,6 @@ interface PersonStorage {
     fun getAllFavorite(): Flow<List<DomainPersonModel>>
 
     suspend fun insert(personModel: FavoriteEntity)
+
+   suspend fun getFavoriteByUrl(url: String): FavoriteEntity
 }
