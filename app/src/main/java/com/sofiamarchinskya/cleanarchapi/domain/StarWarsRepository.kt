@@ -11,6 +11,4 @@ interface StarWarsRepository {
     fun getFavoritesList(): Flow<List<DomainPersonModel>>
 
     suspend fun addPersonToFavorite(personModel: DomainPersonModel)
-
-   suspend fun getFavoriteByUrl(url: String): DomainPersonModel
 }

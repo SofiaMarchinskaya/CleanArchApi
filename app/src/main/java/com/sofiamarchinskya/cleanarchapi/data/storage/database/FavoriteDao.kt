@@ -19,6 +19,6 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorite")
     fun getAllFavorite(): Flow<List<FavoriteEntity>>
 
-    @Query("SELECT * FROM favorite WHERE url = :url")
-    suspend fun getFavoriteByUrl(url: String): FavoriteEntity
+    @Query("SELECT EXISTS (SELECT 1 FROM favorite WHERE url = :url)")
+    suspend fun exists(url: String): Boolean
 }

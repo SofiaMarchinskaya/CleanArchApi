@@ -1,6 +1,5 @@
 package com.sofiamarchinskya.cleanarchapi.data.storage
 
-import android.util.Log
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteDao
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteEntity
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
@@ -25,10 +24,7 @@ class PersonStorageImpl@Inject constructor(private val dao: FavoriteDao):PersonS
 
     override suspend fun insert(personModel: FavoriteEntity) {
         dao.insertFavorite(personModel)
-        Log.d("Бык","данные пришли в хранилище ${personModel.name}")
     }
 
-    override suspend fun getFavoriteByUrl(url: String): FavoriteEntity {
-        return dao.getFavoriteByUrl(url)
-    }
+    override suspend fun isFavorite(url: String): Boolean = dao.exists(url)
 }
