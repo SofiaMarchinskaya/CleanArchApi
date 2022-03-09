@@ -31,15 +31,18 @@ class PeopleListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
-        binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false)
         peopleAdapter = PeopleListAdapter(::openAboutPersonFragment)
-        binding.peopleList.layoutManager = LinearLayoutManager(requireContext())
-        binding.peopleList.adapter = peopleAdapter
-        viewModel = ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java]
-        viewModel.getList()
-        viewModel.personList.observe(viewLifecycleOwner) {
-            peopleAdapter.update(it)
+        binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false).apply {
+            peopleList.layoutManager = LinearLayoutManager(requireContext())
+            peopleList.adapter = peopleAdapter
         }
+        viewModel =
+            ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java].apply {
+                getList()
+                personList.observe(viewLifecycleOwner) {
+                    peopleAdapter.update(it)
+                }
+            }
         return binding.root
     }
 

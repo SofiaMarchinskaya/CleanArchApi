@@ -3,7 +3,6 @@ package com.sofiamarchinskya.cleanarchapi.presentation.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
-import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.databinding.ActivityMainBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.StarWarsPagerAdapter
 

@@ -17,9 +17,7 @@ import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModelFactory
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
-
 
 class FavoritesListFragment : Fragment() {
     private lateinit var binding: FragmentFavouriteListBinding

@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sofiamarchinskya.cleanarchapi.R
+import com.sofiamarchinskya.cleanarchapi.databinding.FragmentFavouriteBinding
 
 class FavouriteFragment : Fragment() {
+    private lateinit var binding: FragmentFavouriteBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_favourites, container, false)
+    ): View {
+        binding = FragmentFavouriteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }
