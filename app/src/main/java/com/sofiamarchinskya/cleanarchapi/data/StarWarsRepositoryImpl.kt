@@ -24,11 +24,7 @@ class StarWarsRepositoryImpl @Inject constructor(
 
     override suspend fun addPersonToFavorite(personModel: DomainPersonModel) {
         storage.insert(
-            FavoriteEntity(
-                url = personModel.url,
-                name = personModel.name,
-                height = personModel.height
-            )
+            personModel.toFavoriteEntity()
         )
     }
 

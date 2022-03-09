@@ -11,13 +11,8 @@ class PersonStorageImpl@Inject constructor(private val dao: FavoriteDao):PersonS
 
     override fun getAllFavorite(): Flow<List<DomainPersonModel>> {
         return dao.getAllFavorite().map {
-            it.map { favoriteEntity ->
-                DomainPersonModel(
-                    name = favoriteEntity.name,
-                    url = favoriteEntity.url,
-                    isFavourite = true,
-                    height = favoriteEntity.height
-                )
+            it.map { input ->
+               input.toDomainPersonModel()
             }
         }
     }

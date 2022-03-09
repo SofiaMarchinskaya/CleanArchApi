@@ -45,8 +45,13 @@ class PersonDetailsFragment : Fragment() {
         }
         binding.apply {
             name.text = personData?.name
-            age.text = personData?.height.toString()
-            color.text = personData?.url
+            height.text = "height: ${personData?.height}"
+            mass.text = "weight: ${personData?.mass}"
+            hairColor.text= "hair color: ${personData?.hair_color}"
+            skinColor.text = "skin color: ${personData?.skin_color}"
+            eyesColor.text = "eye color: ${personData?.eye_color}"
+            birthYear.text = "birth year: ${personData?.birth_year}"
+            gender.text = "gender: ${personData?.gender}"
             checkBox.isChecked = personData?.isFavourite == true
         }
 

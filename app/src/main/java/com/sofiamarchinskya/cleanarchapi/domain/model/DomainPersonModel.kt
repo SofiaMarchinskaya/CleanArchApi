@@ -1,7 +1,7 @@
 package com.sofiamarchinskya.cleanarchapi.domain.model
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -9,18 +9,29 @@ data class DomainPersonModel(
     val name: String,
     val height: Int,
     val isFavourite: Boolean,
-    val url: String
-//    @SerializedName("mass") val mass: Int,
-//    @SerializedName("hair_color") val hair_color: String,
-//    @SerializedName("skin_color") val skin_color: String,
-//    @SerializedName("eye_color") val eye_color: String,
-//    @SerializedName("birth_year") val birth_year: String,
-//    @SerializedName("gender") val gender: String,
-//    @SerializedName("homeworld") val homeworld: String,
-//    //@SerializedName("films") val films : List<String>,
-//    //@SerializedName("species") val species : List<String>,
-//    //@SerializedName("vehicles") val vehicles : List<String>,
-//    //@SerializedName("starships") val starships : List<String>,
-//    @SerializedName("created") val created: String,
-//    @SerializedName("edited") val edited: String,
-):Parcelable
+    val url: String,
+    val mass: Int,
+    val hair_color: String,
+    val skin_color: String,
+    val eye_color: String,
+    val birth_year: String,
+    val gender: String,
+    val homeworld: String,
+    //@SerializedName("films") val films : List<String>,
+    //@SerializedName("species") val species : List<String>,
+    //@SerializedName("vehicles") val vehicles : List<String>,
+    //@SerializedName("starships") val starships : List<String>,
+) : Parcelable {
+    fun toFavoriteEntity() = FavoriteEntity(
+        name = name,
+        height = height,
+        url = url,
+        mass = mass,
+        hair_color = hair_color,
+        skin_color = skin_color,
+        eye_color = eye_color,
+        birth_year = birth_year,
+        gender = gender,
+        homeworld = homeworld,
+    )
+}
