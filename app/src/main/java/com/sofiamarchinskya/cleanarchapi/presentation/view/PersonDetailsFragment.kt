@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,9 +47,8 @@ class PersonDetailsFragment : Fragment() {
             name.text = personData?.name
             age.text = personData?.height.toString()
             color.text = personData?.url
+            checkBox.isChecked = personData?.isFavourite == true
         }
-
-        binding.checkBox.isChecked = personData?.isFavourite == true
 
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

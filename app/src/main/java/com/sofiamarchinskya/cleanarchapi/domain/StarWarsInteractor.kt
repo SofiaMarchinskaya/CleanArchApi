@@ -12,7 +12,6 @@ class StarWarsInteractor(private val repository: StarWarsRepository) : BaseInter
     override fun getFavoritesList(): Flow<List<DomainPersonModel>> = repository.getFavoritesList()
 
     override suspend fun insertFavorites(data: DomainPersonModel) {
-        Log.d("Бык","данные пришли в интерактор  ${data.name}")
         repository.addPersonToFavorite(data)
     }
 

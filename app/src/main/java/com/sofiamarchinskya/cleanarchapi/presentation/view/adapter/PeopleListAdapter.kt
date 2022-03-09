@@ -34,8 +34,8 @@ class PeopleListAdapter(
         fun bind(data: DomainPersonModel) {
             binding.apply {
                 name.text = data.name
-                if(data.isFavourite)
-                star.visibility = View.VISIBLE
+                if (data.isFavourite)
+                    star.visibility = View.VISIBLE
                 else star.visibility = View.INVISIBLE
                 root.setOnClickListener { onClick.invoke(data) }
             }

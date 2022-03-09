@@ -40,8 +40,10 @@ class FavoritesListFragment : Fragment() {
         viewModel.allFavorites.observe(viewLifecycleOwner) {
             listAdapter.update(it)
         }
-        binding.favoriteList.layoutManager = LinearLayoutManager(requireContext())
-        binding.favoriteList.adapter = listAdapter
+        binding.apply {
+            favoriteList.layoutManager = LinearLayoutManager(requireContext())
+            favoriteList.adapter = listAdapter
+        }
         return binding.root
     }
 

@@ -47,4 +47,3 @@ data class DataPerson(
     val networkProduct: PersonServerModel,
     val isFavourite: Boolean
 )
-
