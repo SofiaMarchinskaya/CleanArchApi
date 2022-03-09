@@ -10,5 +10,7 @@ interface PersonStorage {
 
     suspend fun insert(personModel: FavoriteEntity)
 
-   suspend fun isFavorite(url: String):Boolean
+    suspend fun isFavorite(url: String): Boolean
+
+    suspend fun delete(url: String)
 }

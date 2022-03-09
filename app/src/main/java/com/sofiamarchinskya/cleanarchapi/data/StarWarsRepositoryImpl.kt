@@ -32,6 +32,10 @@ class StarWarsRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun delete(url: String) {
+        storage.delete(url)
+    }
+
     private suspend fun mapProducts(personServerList: List<PersonServerModel>): List<DomainPersonModel> {
         return personServerList.map {
             productDataMapper.map(DataPerson(it, storage.isFavorite(it.url)))

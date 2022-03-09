@@ -27,4 +27,8 @@ class PersonStorageImpl@Inject constructor(private val dao: FavoriteDao):PersonS
     }
 
     override suspend fun isFavorite(url: String): Boolean = dao.exists(url)
+
+    override suspend fun delete(url: String) {
+       dao.deleteByUrl(url)
+    }
 }

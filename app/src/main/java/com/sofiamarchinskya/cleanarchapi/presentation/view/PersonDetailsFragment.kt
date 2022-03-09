@@ -23,6 +23,7 @@ class PersonDetailsFragment : Fragment() {
     private var personData: DomainPersonModel? = null
     private lateinit var binding: FragmentPersonDetailsBinding
     private lateinit var viewModel: PersonDetailsViewModel
+
     @Inject
     lateinit var viewModelFactory: PersonDetailsViewModelFactory
 
@@ -38,7 +39,7 @@ class PersonDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
-        viewModel = ViewModelProvider(this,viewModelFactory)[PersonDetailsViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[PersonDetailsViewModel::class.java]
         binding = FragmentPersonDetailsBinding.inflate(inflater, container, false)
         arguments?.let {
             personData = it.getParcelable(Constants.PERSON_DATA)
@@ -49,31 +50,23 @@ class PersonDetailsFragment : Fragment() {
             color.text = personData?.url
         }
 
-        viewModel.isChecked.observe(viewLifecycleOwner) {
-            binding.checkBox.isChecked = it
-        }
+        binding.checkBox.isChecked = personData?.isFavourite == true
 
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 lifecycleScope.launch {
                     personData?.let {
                         viewModel.addToFavourites(it)
-                        Log.d("Бык","отправили данные ${it.name}")
                     }
-
+                }
+            } else {
+                lifecycleScope.launch {
+                    personData?.let {
+                        viewModel.deleteFromFav(it.url)
+                    }
                 }
             }
         }
         return binding.root
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(personData: DomainPersonModel) =
-            PersonDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(Constants.PERSON_DATA, personData)
-                }
-            }
     }
 }

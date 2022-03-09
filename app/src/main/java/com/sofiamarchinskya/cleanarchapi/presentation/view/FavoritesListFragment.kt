@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +25,7 @@ class FavoritesListFragment : Fragment() {
     private lateinit var binding: FragmentFavouriteListBinding
     private lateinit var listAdapter: PeopleListAdapter
     private lateinit var viewModel: FavoritesListViewModel
+
     @Inject
     lateinit var viewModelFactory: FavoritesListViewModelFactory
 
@@ -34,14 +34,13 @@ class FavoritesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
-        viewModel = ViewModelProvider(this,viewModelFactory)[FavoritesListViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[FavoritesListViewModel::class.java]
         binding = FragmentFavouriteListBinding.inflate(inflater, container, false)
         listAdapter = PeopleListAdapter(
             ::openAboutPersonFragment,
         )
         viewModel.allFavorites.observe(viewLifecycleOwner) {
             listAdapter.update(it)
-            Log.d("Бык","скачалось")
         }
         binding.favoriteList.layoutManager = LinearLayoutManager(requireContext())
         binding.favoriteList.adapter = listAdapter
@@ -54,14 +53,5 @@ class FavoritesListFragment : Fragment() {
             R.id.action_favouriteFragment_to_personDetailsFragment,
             bundleOf(Constants.PERSON_DATA to data)
         )
-    }
-
-    companion object {
-        fun newInstance(param1: String, param2: String) =
-            FavoritesListFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
     }
 }

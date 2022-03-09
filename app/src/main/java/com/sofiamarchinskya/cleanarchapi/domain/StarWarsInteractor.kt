@@ -16,7 +16,7 @@ class StarWarsInteractor(private val repository: StarWarsRepository) : BaseInter
         repository.addPersonToFavorite(data)
     }
 
-    override suspend fun getFavorite(url: String): DomainPersonModel {
-        return repository.getFavoriteByUrl(url)
+    override suspend fun removeFromFavorites(url: String) {
+        repository.delete(url)
     }
 }

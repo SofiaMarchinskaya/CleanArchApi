@@ -11,5 +11,5 @@ interface BaseInteractor {
 
   suspend fun insertFavorites(data: DomainPersonModel)
 
-  suspend fun getFavorite(url:String):DomainPersonModel
+  suspend fun removeFromFavorites(url: String)
 }

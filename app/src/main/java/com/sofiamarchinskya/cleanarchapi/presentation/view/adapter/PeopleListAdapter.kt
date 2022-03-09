@@ -1,6 +1,5 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +34,9 @@ class PeopleListAdapter(
         fun bind(data: DomainPersonModel) {
             binding.apply {
                 name.text = data.name
+                if(data.isFavourite)
+                star.visibility = View.VISIBLE
+                else star.visibility = View.INVISIBLE
                 root.setOnClickListener { onClick.invoke(data) }
             }
         }

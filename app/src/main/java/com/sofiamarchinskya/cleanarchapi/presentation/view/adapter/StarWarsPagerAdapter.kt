@@ -13,8 +13,8 @@ class StarWarsPagerAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int): Fragment =
         if (position == 0) {
-            MainListFragment.newInstance()
+            MainListFragment()
         } else {
-            FavouriteFragment.newInstance()
+            FavouriteFragment()
         }
 }
