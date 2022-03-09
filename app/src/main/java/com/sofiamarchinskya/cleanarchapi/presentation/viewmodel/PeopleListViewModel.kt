@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class PeopleListViewModel(private val interactor: BaseInteractor) : ViewModel() {
 
-   private val personListMutable = MutableLiveData<List<DomainPersonModel>>()
+    private val personListMutable = MutableLiveData<List<DomainPersonModel>>()
     val personList: LiveData<List<DomainPersonModel>> = personListMutable
 
     fun getList() {

@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface BaseInteractor {
 
-  suspend fun getItemList() : List<DomainPersonModel>
+    suspend fun getItemList(): List<DomainPersonModel>
 
-  fun getFavoritesList(): Flow<List<DomainPersonModel>>
+    fun getFavoritesList(): Flow<List<DomainPersonModel>>
 
-  suspend fun insertFavorites(data: DomainPersonModel)
+    suspend fun insertFavorites(data: DomainPersonModel)
 
-  suspend fun removeFromFavorites(url: String)
+    suspend fun removeFromFavorites(url: String)
 }

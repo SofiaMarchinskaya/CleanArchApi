@@ -1,8 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.di
 
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsApi
-import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
-import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsServiceImpl
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

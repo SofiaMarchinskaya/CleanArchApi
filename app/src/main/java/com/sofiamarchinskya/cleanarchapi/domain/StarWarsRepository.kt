@@ -2,7 +2,6 @@ package com.sofiamarchinskya.cleanarchapi.domain
 
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 interface StarWarsRepository {
 

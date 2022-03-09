@@ -4,7 +4,6 @@ import com.sofiamarchinskya.cleanarchapi.core.domain.Mapper
 import com.sofiamarchinskya.cleanarchapi.data.net.PersonServerModel
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
-import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteEntity
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import kotlinx.coroutines.flow.Flow

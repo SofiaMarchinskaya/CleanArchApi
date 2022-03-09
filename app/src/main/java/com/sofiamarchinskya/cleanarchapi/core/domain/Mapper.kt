@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.core.domain
 
 import com.sofiamarchinskya.cleanarchapi.data.DataPerson
-import com.sofiamarchinskya.cleanarchapi.data.net.PersonServerModel
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 
 interface Mapper<I, O> {

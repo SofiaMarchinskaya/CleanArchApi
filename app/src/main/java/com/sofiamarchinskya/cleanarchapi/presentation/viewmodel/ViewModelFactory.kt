@@ -10,12 +10,14 @@ class PeopleListViewModelFactory(val interactor: BaseInteractor) : ViewModelProv
         return PeopleListViewModel(interactor) as T
     }
 }
+
 class FavoritesListViewModelFactory(val interactor: BaseInteractor) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return FavoritesListViewModel(interactor) as T
     }
 }
+
 class PersonDetailsViewModelFactory(val interactor: BaseInteractor) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class PersonStorageImpl@Inject constructor(private val dao: FavoriteDao):PersonStorage {
+class PersonStorageImpl @Inject constructor(private val dao: FavoriteDao) : PersonStorage {
 
     override fun getAllFavorite(): Flow<List<DomainPersonModel>> {
         return dao.getAllFavorite().map {
             it.map { input ->
-               input.toDomainPersonModel()
+                input.toDomainPersonModel()
             }
         }
     }
@@ -24,6 +24,6 @@ class PersonStorageImpl@Inject constructor(private val dao: FavoriteDao):PersonS
     override suspend fun isFavorite(url: String): Boolean = dao.exists(url)
 
     override suspend fun delete(url: String) {
-       dao.deleteByUrl(url)
+        dao.deleteByUrl(url)
     }
 }

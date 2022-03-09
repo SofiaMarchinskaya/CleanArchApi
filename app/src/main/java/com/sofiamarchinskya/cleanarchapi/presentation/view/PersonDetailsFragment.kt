@@ -47,7 +47,7 @@ class PersonDetailsFragment : Fragment() {
             name.text = personData?.name
             height.text = "height: ${personData?.height}"
             mass.text = "weight: ${personData?.mass}"
-            hairColor.text= "hair color: ${personData?.hair_color}"
+            hairColor.text = "hair color: ${personData?.hair_color}"
             skinColor.text = "skin color: ${personData?.skin_color}"
             eyesColor.text = "eye color: ${personData?.eye_color}"
             birthYear.text = "birth year: ${personData?.birth_year}"

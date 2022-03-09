@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.sofiamarchinskya.cleanarchapi.core.domain.BaseInteractor
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.AppDatabase
-import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.*
+import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModelFactory
+import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
+import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModelFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -17,11 +19,11 @@ class AppModule(private val context: Context) {
         PeopleListViewModelFactory(interactor)
 
     @Provides
-    fun providePersonDetailsViewModelFactory(interactor: BaseInteractor):PersonDetailsViewModelFactory =
+    fun providePersonDetailsViewModelFactory(interactor: BaseInteractor): PersonDetailsViewModelFactory =
         PersonDetailsViewModelFactory(interactor)
 
     @Provides
-    fun provideFavoritesListViewModelFactory(interactor: BaseInteractor):FavoritesListViewModelFactory =
+    fun provideFavoritesListViewModelFactory(interactor: BaseInteractor): FavoritesListViewModelFactory =
         FavoritesListViewModelFactory(interactor)
 
     @Provides

@@ -17,7 +17,7 @@ data class FavoriteEntity(
     @SerializedName("gender") val gender: String,
     @SerializedName("homeworld") val homeworld: String,
     @SerializedName("url") @PrimaryKey val url: String,
-){
+) {
     fun toDomainPersonModel() = DomainPersonModel(
         name = name,
         height = height,

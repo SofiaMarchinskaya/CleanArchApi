@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.data.net
 
 import com.google.gson.annotations.SerializedName
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 
 data class PersonServerModel(
     @SerializedName("name") val name: String,
@@ -19,6 +18,7 @@ data class PersonServerModel(
     //@SerializedName("vehicles") val vehicles : List<String>,
     //@SerializedName("starships") val starships : List<String>,
 )
+
 data class PeopleResponse(
     val count: Int = 0,
     val next: String = "",

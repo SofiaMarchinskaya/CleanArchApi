@@ -4,7 +4,7 @@ package com.sofiamarchinskya.cleanarchapi.data.net
 import retrofit2.Response
 import retrofit2.http.GET
 
-interface StarWarsApi{
+interface StarWarsApi {
     @GET("people")
-    suspend fun getPeople():Response<PeopleResponse>
+    suspend fun getPeople(): Response<PeopleResponse>
 }

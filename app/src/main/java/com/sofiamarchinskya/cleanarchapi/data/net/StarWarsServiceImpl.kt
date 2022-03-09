@@ -20,8 +20,4 @@ class StarWarsServiceImpl(private val starWarsApi: StarWarsApi) : StarWarsServic
             throw NetworkErrorException("Server error + ${e.message}")
         }
     }
-
-    override fun getWishlist(productIds: List<String>): List<PersonServerModel> {
-        TODO("Not yet implemented")
-    }
 }
