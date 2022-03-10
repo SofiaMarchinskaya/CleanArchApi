@@ -13,7 +13,6 @@ import com.sofiamarchinskya.cleanarchapi.Constants
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentFavouriteListBinding
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModel
@@ -33,21 +32,25 @@ class FavoritesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory)[FavoritesListViewModel::class.java]
         binding = FragmentFavouriteListBinding.inflate(inflater, container, false)
         listAdapter = PeopleListAdapter(
-            ::openAboutPersonFragment,
+            viewModel::onAboutItemClicked,
         )
-        viewModel.allFavorites.observe(viewLifecycleOwner) {
-            listAdapter.update(it)
-        }
+        viewModel =
+            ViewModelProvider(this, viewModelFactory)[FavoritesListViewModel::class.java].apply {
+                allFavorites.observe(viewLifecycleOwner) {
+                    listAdapter.update(it)
+                }
+                onNoteItemClickEvent.observe(viewLifecycleOwner) {
+                    openAboutPersonFragment(it)
+                }
+            }
         binding.apply {
             favoriteList.layoutManager = LinearLayoutManager(requireContext())
             favoriteList.adapter = listAdapter
         }
         return binding.root
     }
-
 
     private fun openAboutPersonFragment(data: UIModel) {
         view?.findNavController()?.navigate(

@@ -13,7 +13,6 @@ import com.sofiamarchinskya.cleanarchapi.Constants
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
@@ -32,7 +31,7 @@ class PeopleListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
-        peopleAdapter = PeopleListAdapter(::openAboutPersonFragment)
+        peopleAdapter = PeopleListAdapter(viewModel::onAboutItemClicked)
         binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false).apply {
             peopleList.layoutManager = LinearLayoutManager(requireContext())
             peopleList.adapter = peopleAdapter
@@ -42,6 +41,9 @@ class PeopleListFragment : Fragment() {
                 getList()
                 personList.observe(viewLifecycleOwner) {
                     peopleAdapter.update(it)
+                }
+                onNoteItemClickEvent.observe(viewLifecycleOwner) {
+                    openAboutPersonFragment(it)
                 }
             }
         return binding.root

@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
