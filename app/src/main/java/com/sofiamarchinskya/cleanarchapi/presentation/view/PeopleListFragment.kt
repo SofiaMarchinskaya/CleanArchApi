@@ -31,21 +31,22 @@ class PeopleListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java]
         peopleAdapter = PeopleListAdapter(viewModel::onAboutItemClicked)
         binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false).apply {
             peopleList.layoutManager = LinearLayoutManager(requireContext())
             peopleList.adapter = peopleAdapter
         }
-        viewModel =
-            ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java].apply {
-                getList()
-                personList.observe(viewLifecycleOwner) {
-                    peopleAdapter.update(it)
-                }
-                onNoteItemClickEvent.observe(viewLifecycleOwner) {
-                    openAboutPersonFragment(it)
-                }
+        viewModel.apply {
+            getList()
+            personList.observe(viewLifecycleOwner) {
+                peopleAdapter.update(it)
             }
+            onNoteItemClickEvent.observe(viewLifecycleOwner) {
+                openAboutPersonFragment(it)
+            }
+        }
         return binding.root
     }
 

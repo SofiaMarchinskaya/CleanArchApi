@@ -33,18 +33,19 @@ class FavoritesListFragment : Fragment() {
     ): View {
         (requireActivity().applicationContext as App).appComponent.inject(this)
         binding = FragmentFavouriteListBinding.inflate(inflater, container, false)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory)[FavoritesListViewModel::class.java]
         listAdapter = PeopleListAdapter(
             viewModel::onAboutItemClicked,
         )
-        viewModel =
-            ViewModelProvider(this, viewModelFactory)[FavoritesListViewModel::class.java].apply {
-                allFavorites.observe(viewLifecycleOwner) {
-                    listAdapter.update(it)
-                }
-                onNoteItemClickEvent.observe(viewLifecycleOwner) {
-                    openAboutPersonFragment(it)
-                }
+        viewModel.apply {
+            allFavorites.observe(viewLifecycleOwner) {
+                listAdapter.update(it)
             }
+            onNoteItemClickEvent.observe(viewLifecycleOwner) {
+                openAboutPersonFragment(it)
+            }
+        }
         binding.apply {
             favoriteList.layoutManager = LinearLayoutManager(requireContext())
             favoriteList.adapter = listAdapter
