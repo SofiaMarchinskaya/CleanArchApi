@@ -1,6 +1,5 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
-import com.sofiamarchinskya.cleanarchapi.core.domain.Mapper
 import com.sofiamarchinskya.cleanarchapi.data.net.PersonServerModel
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
@@ -11,7 +10,6 @@ import javax.inject.Inject
 
 class StarWarsRepositoryImpl @Inject constructor(
     private val starWarsService: StarWarsService,
-    private val productDataMapper: Mapper<DataPerson, DomainPersonModel>,
     private val storage: PersonStorage
 ) : StarWarsRepository {
 
@@ -33,12 +31,7 @@ class StarWarsRepositoryImpl @Inject constructor(
 
     private suspend fun mapProducts(personServerList: List<PersonServerModel>): List<DomainPersonModel> {
         return personServerList.map {
-            productDataMapper.map(DataPerson(it, storage.isFavorite(it.url)))
+            DataPerson(it, storage.isFavorite(it.url)).toDomainPersonModel()
         }
     }
 }
-
-data class DataPerson(
-    val networkProduct: PersonServerModel,
-    val isFavourite: Boolean
-)

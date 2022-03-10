@@ -18,10 +18,3 @@ data class PersonServerModel(
     //@SerializedName("vehicles") val vehicles : List<String>,
     //@SerializedName("starships") val starships : List<String>,
 )
-
-data class PeopleResponse(
-    val count: Int = 0,
-    val next: String = "",
-    val previous: String = "df",
-    val results: List<PersonServerModel>
-)
