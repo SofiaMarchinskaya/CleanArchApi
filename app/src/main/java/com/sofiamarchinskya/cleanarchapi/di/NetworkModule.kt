@@ -16,7 +16,9 @@ class NetworkModule {
             .build()
         return retrofit.create()
     }
-}
 
-private const val BASE_URL =
-    "https://swapi.dev/api/"
+    companion object {
+        private const val BASE_URL =
+            "https://swapi.dev/api/"
+    }
+}

@@ -5,13 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sofiamarchinskya.cleanarchapi.databinding.PersonItemBinding
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
+import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 
 class PeopleListAdapter(
-    private var onClick: (DomainPersonModel) -> Unit
+    private var onClick: (UIModel) -> Unit
 ) :
     RecyclerView.Adapter<PeopleListAdapter.PersonViewHolder>() {
-    private var list: List<DomainPersonModel> = ArrayList()
+    private var list: List<UIModel> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder =
         PersonViewHolder(
@@ -22,7 +22,7 @@ class PeopleListAdapter(
         holder.bind(list[position])
     }
 
-    fun update(list: List<DomainPersonModel>) {
+    fun update(list: List<UIModel>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -31,7 +31,7 @@ class PeopleListAdapter(
 
     inner class PersonViewHolder(private val binding: PersonItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: DomainPersonModel) {
+        fun bind(data: UIModel) {
             binding.apply {
                 name.text = data.name
                 if (data.isFavourite)

@@ -1,15 +1,15 @@
 package com.sofiamarchinskya.cleanarchapi.core.domain
 
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
+import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import kotlinx.coroutines.flow.Flow
 
 interface BaseInteractor {
 
-    suspend fun getItemList(): List<DomainPersonModel>
+    suspend fun getItemList(): List<UIModel>
 
-    fun getFavoritesList(): Flow<List<DomainPersonModel>>
+    fun getFavoritesList(): Flow<List<UIModel>>
 
-    suspend fun insertFavorites(data: DomainPersonModel)
+    suspend fun insertFavorites(data: UIModel)
 
     suspend fun removeFromFavorites(url: String)
 }

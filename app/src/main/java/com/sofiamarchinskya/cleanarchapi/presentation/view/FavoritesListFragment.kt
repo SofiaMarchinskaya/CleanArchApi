@@ -14,6 +14,7 @@ import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentFavouriteListBinding
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
+import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModelFactory
@@ -48,7 +49,7 @@ class FavoritesListFragment : Fragment() {
     }
 
 
-    private fun openAboutPersonFragment(data: DomainPersonModel) {
+    private fun openAboutPersonFragment(data: UIModel) {
         view?.findNavController()?.navigate(
             R.id.action_favouriteFragment_to_personDetailsFragment,
             bundleOf(Constants.PERSON_DATA to data)

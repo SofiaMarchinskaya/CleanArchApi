@@ -1,5 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +13,14 @@ import androidx.navigation.fragment.findNavController
 import com.sofiamarchinskya.cleanarchapi.Constants
 import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPersonDetailsBinding
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
+import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModelFactory
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PersonDetailsFragment : Fragment() {
-    private var personData: DomainPersonModel? = null
+    private var personData: UIModel? = null
     private lateinit var binding: FragmentPersonDetailsBinding
     private lateinit var viewModel: PersonDetailsViewModel
 
@@ -33,6 +34,7 @@ class PersonDetailsFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
