@@ -1,5 +1,10 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +12,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sofiamarchinskya.cleanarchapi.Constants
@@ -26,6 +32,18 @@ class PeopleListFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: PeopleListViewModelFactory
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val broadCastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(contxt: Context?, intent: Intent?) {
+                when (intent?.action) {
+                   Constants.ITEM_CHANGED-> viewModel.getList()
+                }
+            }
+        }
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(broadCastReceiver, IntentFilter(Constants.ITEM_CHANGED))
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -1,6 +1,7 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.sofiamarchinskya.cleanarchapi.Constants
 import com.sofiamarchinskya.cleanarchapi.app.App
@@ -68,6 +70,9 @@ class PersonDetailsFragment : Fragment() {
                 lifecycleScope.launch {
                     personData?.let {
                         viewModel.deleteFromFav(it.url)
+                        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(Intent().apply {
+                            action = Constants.ITEM_CHANGED
+                        })
                     }
                 }
             }
