@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
-import com.sofiamarchinskya.cleanarchapi.Constants
+import com.sofiamarchinskya.cleanarchapi.utils.Constants
 import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPersonDetailsBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel

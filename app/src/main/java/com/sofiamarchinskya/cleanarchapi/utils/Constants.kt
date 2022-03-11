@@ -1,4 +1,4 @@
-package com.sofiamarchinskya.cleanarchapi
+package com.sofiamarchinskya.cleanarchapi.utils
 
 object Constants {
     const val PERSON_DATA = "person_data"

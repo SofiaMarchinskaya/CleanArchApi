@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sofiamarchinskya.cleanarchapi.core.domain.BaseInteractor
+import com.sofiamarchinskya.cleanarchapi.domain.StarWarsInteractor
 import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import kotlinx.coroutines.launch
 
-class PeopleListViewModel(private val interactor: BaseInteractor) : ViewModel() {
+class PeopleListViewModel(private val interactor: StarWarsInteractor) : ViewModel() {
 
     private val personListMutable = MutableLiveData<List<UIModel>>()
     val personList: LiveData<List<UIModel>> = personListMutable

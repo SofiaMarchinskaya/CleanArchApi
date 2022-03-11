@@ -2,7 +2,7 @@ package com.sofiamarchinskya.cleanarchapi.di
 
 import android.content.Context
 import androidx.room.Room
-import com.sofiamarchinskya.cleanarchapi.core.domain.BaseInteractor
+import com.sofiamarchinskya.cleanarchapi.domain.StarWarsInteractor
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.AppDatabase
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModelFactory
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
@@ -15,15 +15,15 @@ import javax.inject.Singleton
 class AppModule(private val context: Context) {
 
     @Provides
-    fun providePeopleListViewModelFactory(interactor: BaseInteractor): PeopleListViewModelFactory =
+    fun providePeopleListViewModelFactory(interactor: StarWarsInteractor): PeopleListViewModelFactory =
         PeopleListViewModelFactory(interactor)
 
     @Provides
-    fun providePersonDetailsViewModelFactory(interactor: BaseInteractor): PersonDetailsViewModelFactory =
+    fun providePersonDetailsViewModelFactory(interactor: StarWarsInteractor): PersonDetailsViewModelFactory =
         PersonDetailsViewModelFactory(interactor)
 
     @Provides
-    fun provideFavoritesListViewModelFactory(interactor: BaseInteractor): FavoritesListViewModelFactory =
+    fun provideFavoritesListViewModelFactory(interactor: StarWarsInteractor): FavoritesListViewModelFactory =
         FavoritesListViewModelFactory(interactor)
 
     @Provides
