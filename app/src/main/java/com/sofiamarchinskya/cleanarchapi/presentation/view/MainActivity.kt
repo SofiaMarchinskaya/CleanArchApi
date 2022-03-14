@@ -1,10 +1,17 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.viewpager2.widget.ViewPager2
+import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.databinding.ActivityMainBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.StarWarsPagerAdapter
+import com.sofiamarchinskya.cleanarchapi.utils.Constants
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

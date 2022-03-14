@@ -5,11 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
@@ -20,6 +22,7 @@ import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
+import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.CommonViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
 import javax.inject.Inject
@@ -28,6 +31,7 @@ class PeopleListFragment : Fragment() {
     private lateinit var binding: FragmentPeopleListBinding
     private lateinit var peopleAdapter: PeopleListAdapter
     private lateinit var viewModel: PeopleListViewModel
+    private val commonViewModel: CommonViewModel by activityViewModels()
 
     @Inject
     lateinit var viewModelFactory: PeopleListViewModelFactory
@@ -36,13 +40,14 @@ class PeopleListFragment : Fragment() {
         val broadCastReceiver = object : BroadcastReceiver() {
             override fun onReceive(contxt: Context?, intent: Intent?) {
                 when (intent?.action) {
-                   Constants.ITEM_CHANGED-> viewModel.getList()
+                    Constants.ITEM_CHANGED -> viewModel.getList()
                 }
             }
         }
         LocalBroadcastManager.getInstance(requireContext())
             .registerReceiver(broadCastReceiver, IntentFilter(Constants.ITEM_CHANGED))
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,7 +55,7 @@ class PeopleListFragment : Fragment() {
         (requireActivity().applicationContext as App).appComponent.inject(this)
         viewModel =
             ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java]
-        peopleAdapter = PeopleListAdapter(viewModel::onAboutItemClicked)
+        peopleAdapter = PeopleListAdapter(commonViewModel::onAboutItemClicked)
         binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false).apply {
             peopleList.layoutManager = LinearLayoutManager(requireContext())
             peopleList.adapter = peopleAdapter
@@ -60,9 +65,9 @@ class PeopleListFragment : Fragment() {
             personList.observe(viewLifecycleOwner) {
                 peopleAdapter.update(it)
             }
-            onNoteItemClickEvent.observe(viewLifecycleOwner) {
-                openAboutPersonFragment(it)
-            }
+        }
+        commonViewModel.onNoteItemClickEvent.observe(viewLifecycleOwner) {
+            openAboutPersonFragment(it)
         }
         return binding.root
     }

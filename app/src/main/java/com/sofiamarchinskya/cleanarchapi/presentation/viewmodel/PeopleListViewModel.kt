@@ -13,15 +13,10 @@ class PeopleListViewModel(private val interactor: StarWarsInteractor) : ViewMode
 
     private val personListMutable = MutableLiveData<List<UIModel>>()
     val personList: LiveData<List<UIModel>> = personListMutable
-    val onNoteItemClickEvent = SingleLiveEvent<UIModel>()
 
     fun getList() {
         viewModelScope.launch {
             personListMutable.postValue(interactor.getItemList().map { it.toUIModel() })
         }
-    }
-
-    fun onAboutItemClicked(note: UIModel) {
-        onNoteItemClickEvent.value = note
     }
 }
