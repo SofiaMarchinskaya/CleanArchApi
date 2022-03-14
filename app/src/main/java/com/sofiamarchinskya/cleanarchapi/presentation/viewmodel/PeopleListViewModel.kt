@@ -17,7 +17,7 @@ class PeopleListViewModel(private val interactor: StarWarsInteractor) : ViewMode
 
     fun getList() {
         viewModelScope.launch {
-            personListMutable.postValue(interactor.getItemList())
+            personListMutable.postValue(interactor.getItemList().map { it.toUIModel() })
         }
     }
 
