@@ -21,11 +21,5 @@
         android:name="com.sofiamarchinskya.cleanarchapi.presentation.view.PersonDetailsFragment"
         android:label="fragment_person_details"
         tools:layout="@layout/fragment_person_details">
-    <action
-        android:id="@+id/action_personDetailsFragment_to_favouriteFragment"
-        app:destination="@id/favouriteFragment"
-        app:popUpTo="@+id/favouriteFragment"
-        app:popUpToInclusive="true"
-        />
     </fragment>
 </navigation>

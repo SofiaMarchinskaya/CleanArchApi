@@ -19,11 +19,4 @@ class MainListFragment : Fragment() {
         binding = FragmentMainListBinding.inflate(inflater, container, false)
         return binding.root
     }
-    override fun onPause() {
-        super.onPause()
-        val currentFragment = requireActivity().findNavController(R.id.nav_host_fragment_favorites).currentDestination?.id
-        if(currentFragment!= R.id.favouriteFragment)
-            requireActivity().findNavController(R.id.nav_host_fragment_favorites)
-                .navigate(R.id.action_personDetailsFragment_to_favouriteFragment)
-    }
 }
