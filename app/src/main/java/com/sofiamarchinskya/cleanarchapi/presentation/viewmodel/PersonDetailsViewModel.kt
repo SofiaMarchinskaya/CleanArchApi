@@ -2,6 +2,7 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsInteractor
+import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 
 class PersonDetailsViewModel(private val interactor: StarWarsInteractor) : ViewModel() {

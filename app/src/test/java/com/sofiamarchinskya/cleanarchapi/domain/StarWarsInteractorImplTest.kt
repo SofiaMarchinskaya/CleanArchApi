@@ -1,5 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.domain
 
+import com.sofiamarchinskya.cleanarchapi.data.FakeRepository
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -8,54 +9,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 
-class TestRepository : StarWarsRepository {
-    private val list = listOf(
-        DomainPersonModel(
-            name = "name",
-            height = 1,
-            url = "url",
-            mass = 12,
-            hair_color = "hair_color",
-            skin_color = "skin_color",
-            eye_color = "eye_color",
-            birth_year = "birth_year",
-            gender = "gender",
-            homeworld = "homeworld",
-            isFavourite = true
-        ),
-        DomainPersonModel(
-            name = "na",
-            height = 1,
-            url = "ul",
-            mass = 12,
-            hair_color = "hair_color",
-            skin_color = "skinolor",
-            eye_color = "eye_color",
-            birth_year = "birth_yar",
-            gender = "geder",
-            homeworld = "homeorld",
-            isFavourite = true
-        )
-    )
-
-    override suspend fun getPersonList(): List<DomainPersonModel> = list
-
-    override fun getFavoritesList(): Flow<List<DomainPersonModel>> = flow {
-        emit(list)
-    }
-
-    override suspend fun addPersonToFavorite(personModel: DomainPersonModel) {
-
-    }
-
-    override suspend fun delete(url: String) {
-
-    }
-
-}
-
 class StarWarsInteractorImplTest {
-    private val interactor = StarWarsInteractorImpl(repository = TestRepository())
+    private val interactor = StarWarsInteractorImpl(FakeRepository())
     private val expected = listOf(
         DomainPersonModel(
             name = "name",

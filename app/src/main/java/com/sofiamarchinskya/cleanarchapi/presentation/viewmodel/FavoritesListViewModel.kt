@@ -9,7 +9,11 @@ import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import kotlinx.coroutines.flow.map
 
 class FavoritesListViewModel(interactor: StarWarsInteractor) : ViewModel() {
+    val onNoteItemClickEvent = SingleLiveEvent<UIModel>()
 
+    fun onAboutItemClicked(note: UIModel) {
+        onNoteItemClickEvent.value = note
+    }
     val allFavorites: LiveData<List<UIModel>> =
         interactor.getFavoritesList().map { data -> data.map { it.toUIModel() } }.asLiveData()
 }

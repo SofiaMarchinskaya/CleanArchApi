@@ -1,14 +1,11 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +15,6 @@ import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentFavouriteListBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
-import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.CommonViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.FavoritesListViewModelFactory
 import javax.inject.Inject
@@ -27,7 +23,6 @@ class FavoritesListFragment : Fragment() {
     private lateinit var binding: FragmentFavouriteListBinding
     private lateinit var listAdapter: PeopleListAdapter
     private lateinit var viewModel: FavoritesListViewModel
-    private val commonViewModel: CommonViewModel by activityViewModels()
 
     @Inject
     lateinit var viewModelFactory: FavoritesListViewModelFactory
@@ -41,14 +36,14 @@ class FavoritesListFragment : Fragment() {
         viewModel =
             ViewModelProvider(this, viewModelFactory)[FavoritesListViewModel::class.java]
         listAdapter = PeopleListAdapter(
-            commonViewModel::onAboutItemClicked,
+            viewModel::onAboutItemClicked,
         )
         viewModel.apply {
             allFavorites.observe(viewLifecycleOwner) {
                 listAdapter.update(it)
             }
         }
-        commonViewModel.onNoteItemClickEvent.observe(viewLifecycleOwner) {
+        viewModel.onNoteItemClickEvent.observe(viewLifecycleOwner) {
             openAboutPersonFragment(it)
         }
         binding.apply {

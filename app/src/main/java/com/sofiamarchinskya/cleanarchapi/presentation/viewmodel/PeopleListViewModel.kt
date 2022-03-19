@@ -10,6 +10,11 @@ import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import kotlinx.coroutines.launch
 
 class PeopleListViewModel(private val interactor: StarWarsInteractor) : ViewModel() {
+    val onNoteItemClickEvent = SingleLiveEvent<UIModel>()
+
+    fun onAboutItemClicked(note: UIModel) {
+        onNoteItemClickEvent.value = note
+    }
 
     private val personListMutable = MutableLiveData<List<UIModel>>()
     val personList: LiveData<List<UIModel>> = personListMutable
