@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.sofiamarchinskya.cleanarchapi.R
+import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
@@ -29,12 +30,17 @@ class PeopleListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (requireActivity().applicationContext as App).appComponent.inject(this)
         viewModel =
             ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java]
         peopleAdapter = PeopleListAdapter()
         binding =  FragmentPeopleListBinding.inflate(layoutInflater, container, false)
         setHasOptionsMenu(true)
-        setupSnackbar()
+        viewModel.items.observe(viewLifecycleOwner){
+            peopleAdapter.update(it)
+        }
+        binding.tasksList.adapter = peopleAdapter
+      // setupSnackbar()
         setupNavigation()
         return binding.root
     }
@@ -43,17 +49,17 @@ class PeopleListFragment : Fragment() {
         inflater.inflate(R.menu.people_frag_menu, menu)
     }
 
-    private fun setupSnackbar() {
-        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-        //arguments?.let {
-        //    viewModel.showEditResultMessage(args.userMessage)
-        //}
-    }
+//    private fun setupSnackbar() {
+//        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+//        arguments?.let {
+//          viewModel.showEditResultMessage(args.userMessage)
+//       }
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean=
         when (item.itemId) {
             R.id.menu_clear -> {
-                //viewModel.clearCompletedTasks()
+                viewModel.clearFavorites()
                 true
             }
             R.id.menu_filter -> {
@@ -69,13 +75,13 @@ class PeopleListFragment : Fragment() {
             menuInflater.inflate(R.menu.filter_menu, menu)
 
             setOnMenuItemClickListener {
-//                viewModel.setFiltering(
-//                    when (it.itemId) {
-//                        R.id.active -> FilterType.ALL_PEOPLE
-//                        R.id.completed -> FilterType.FAVORITES
-//                        else -> TasksFilterType.ALL_TASKS
-//                    }
-//                )
+                viewModel.setFiltering(
+                    when (it.itemId) {
+                        R.id.active -> FilterType.NOT_FAVORITE
+                        R.id.completed -> FilterType.FAVORITES
+                        else -> FilterType.ALL_PEOPLE
+                    }
+                )
                 true
             }
             show()

@@ -18,15 +18,13 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
     //Список TODO
     private val _forceUpdate = MutableLiveData(false)
     private val _items: LiveData<List<Person>> = _forceUpdate.switchMap { forceUpdate ->
-        if (forceUpdate) {
-            _dataLoading.value = true
+        _dataLoading.value = true
             viewModelScope.launch {
                 repository.refreshPersonList()
                 _dataLoading.value = false
             }
-        }
-        repository.observePersonList().switchMap { filterList(it) }
 
+        repository.observePersonList().switchMap { filterList(it) }
     }
 
     val items: LiveData<List<Person>> = _items

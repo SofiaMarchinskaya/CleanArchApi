@@ -41,7 +41,15 @@ class StarWarsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshPersonList() {
+        val res = starWarsService.getPersonList()
 
+        if (res is Result.Success) {
+            res.data.forEach { person ->
+                storage.addPerson(person)
+            }
+        } else if (res is Result.Error) {
+            throw res.exception
+        }
     }
 
     override suspend fun getPerson(taskId: String, forceUpdate: Boolean): Result<Person> {

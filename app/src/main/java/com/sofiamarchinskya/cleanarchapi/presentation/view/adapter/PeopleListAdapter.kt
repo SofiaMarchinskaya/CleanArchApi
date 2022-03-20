@@ -35,8 +35,8 @@ class PeopleListAdapter(
             binding.apply {
                 name.text = data.name
                 if (data.isfavorite)
-                    star.visibility = View.VISIBLE
-                else star.visibility = View.INVISIBLE
+                    //star.visibility = View.VISIBLE
+               // else star.visibility = View.INVISIBLE
                 root.setOnClickListener {// onClick.invoke(data) }
                 }
             }
