@@ -17,9 +17,9 @@ interface PersonStorage {
 
     suspend fun deleteFromFavorites(person: Person)
 
+    fun observePersonById(url: String): LiveData<Result<Person>>
+
     suspend fun clearFavorites()
 
     suspend fun addPerson(person: Person)
-
-    suspend fun deletePerson(url: String)
 }

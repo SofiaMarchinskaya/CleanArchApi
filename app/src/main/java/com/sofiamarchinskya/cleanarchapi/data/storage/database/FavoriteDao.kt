@@ -17,7 +17,10 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorite WHERE url = :url")
     suspend fun getPersonById(url: String):Person?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Query("SELECT * FROM favorite WHERE url = :url")
+    fun observePersonById(url: String): LiveData<Person>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPerson(person: Person)
 
     @Query("UPDATE favorite SET isfavorite = :isFavorite WHERE url = :url")
@@ -26,6 +29,6 @@ interface FavoriteDao {
     @Query("DELETE FROM favorite WHERE url = :url")
     suspend fun deletePerson(url: String): Int
 
-    @Query("DELETE FROM favorite WHERE isfavorite = 1")
+    @Query("UPDATE favorite SET isfavorite = 0 WHERE isfavorite = 1")
     suspend fun deleteFavorites(): Int
 }

@@ -14,57 +14,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="30sp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
         <CheckBox
             android:id="@+id/checkBox"
-            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@drawable/checkbox_selector" />
+            android:button="@drawable/checkbox_selector"
+            android:gravity="center" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/gender"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/birth_year"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/skin_color"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/hair_color"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/height"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/mass"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/eyes_color"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
 </LinearLayout>

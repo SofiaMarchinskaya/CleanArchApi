@@ -3,9 +3,11 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
+import androidx.lifecycle.Transformations.switchMap
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
+import com.sofiamarchinskya.cleanarchapi.data.succeeded
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
 import com.sofiamarchinskya.cleanarchapi.presentation.view.DELETE_RESULT_OK
@@ -18,15 +20,15 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
     //Список TODO
     private val _forceUpdate = MutableLiveData(false)
     private val _items: LiveData<List<Person>> = _forceUpdate.switchMap { forceUpdate ->
-        _dataLoading.value = true
+        if (forceUpdate) {
+            _dataLoading.value = true
             viewModelScope.launch {
                 repository.refreshPersonList()
                 _dataLoading.value = false
             }
-
+        }
         repository.observePersonList().switchMap { filterList(it) }
     }
-
     val items: LiveData<List<Person>> = _items
 
     private val _dataLoading = MutableLiveData<Boolean>()
@@ -51,7 +53,7 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
     // Not used at the moment
     private val isDataLoadingError = MutableLiveData<Boolean>()
 
-   val _openTaskEvent = SingleLiveEvent<String>()
+   val _openPersonDetailsEvent = SingleLiveEvent<String>()
 
     private var resultMessageShown: Boolean = false
 
@@ -61,15 +63,12 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
     }
 
     init {
-        // Set initial state
         setFiltering(FilterType.ALL_PEOPLE)
-        //  loadTasks(true)
+        loadPersonList(true)
     }
 
     fun setFiltering(requestType: FilterType) {
         currentFiltering = requestType
-
-        // Depending on the filter type, set the filtering label, icon drawables, etc.
         when (requestType) {
             FilterType.ALL_PEOPLE -> {
                 setFilter(
@@ -91,6 +90,9 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
             }
         }
          loadPersonList(false)
+    }
+    fun loadPersonList(forceUpdate: Boolean) {
+        _forceUpdate.value = forceUpdate
     }
 
     private fun setFilter(
@@ -123,9 +125,8 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
 
 
     //открыть подробную информацию
-    fun openTask(taskId: String) {
-        _openTaskEvent.value = taskId
-        _openTaskEvent.call()
+    fun openPersonDetails(taskId: String) {
+        _openPersonDetailsEvent.value = taskId
     }
 
     fun showEditResultMessage(result: Int) {
@@ -139,7 +140,6 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
 
     private fun showSnackbarMessage(message: Int) {
         _snackbarText.value = message
-        _snackbarText.call()
     }
 
     //Фильтрация элементов списка
@@ -159,10 +159,6 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
         }
 
         return result
-    }
-
-    fun loadPersonList(forceUpdate: Boolean) {
-        _forceUpdate.value = forceUpdate
     }
 
     private fun filterItems(personList: List<Person>, filteringType: FilterType): List<Person> {

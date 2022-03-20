@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StarWarsRepositoryImpl @Inject constructor(
@@ -29,15 +29,14 @@ class StarWarsRepositoryImpl @Inject constructor(
     }
 
     private suspend fun updateTasksFromRemoteDataSource() {
-            val remoteTasks = starWarsService.getPersonList()
-
-            if (remoteTasks is Result.Success) {
-                remoteTasks.data.forEach { task ->
-                    storage.addPerson(task)
-                }
-            } else if (remoteTasks is Result.Error) {
-                throw remoteTasks.exception
+        val remoteTasks = starWarsService.getPersonList()
+        if (remoteTasks is Result.Success) {
+            remoteTasks.data.forEach { task ->
+                storage.addPerson(task)
             }
+        } else if (remoteTasks is Result.Error) {
+            throw remoteTasks.exception
+        }
     }
 
     override suspend fun refreshPersonList() {
@@ -74,5 +73,9 @@ class StarWarsRepositoryImpl @Inject constructor(
         coroutineScope {
             launch { storage.clearFavorites() }
         }
+    }
+
+    override fun observePerson(url: String): LiveData<Result<Person>> {
+        return storage.observePersonById(url)
     }
 }

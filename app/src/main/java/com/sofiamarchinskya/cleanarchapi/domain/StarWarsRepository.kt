@@ -19,4 +19,6 @@ interface StarWarsRepository {
     suspend fun deleteFromFavorite(person: Person)
 
     suspend fun clearFavorites()
+
+    fun observePerson(url: String): LiveData<Result<Person>>
 }
