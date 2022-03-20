@@ -8,6 +8,8 @@ import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorageImpl
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteDao
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
+import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModelFactory
 import dagger.Module
 import dagger.Provides
 
@@ -18,6 +20,14 @@ class DataModule {
         service: StarWarsService,
         storage: PersonStorage
     ): StarWarsRepository = StarWarsRepositoryImpl(service, storage)
+
+    @Provides
+    fun providePeopleListViewModelFactory(repository: StarWarsRepository): PeopleListViewModelFactory =
+        PeopleListViewModelFactory(repository)
+
+    @Provides
+    fun providePersonDetailsViewModelFactory(repository: StarWarsRepository): PersonDetailsViewModelFactory =
+        PersonDetailsViewModelFactory(repository)
 
     @Provides
     fun provideService(starWarsApi: StarWarsApi): StarWarsService = StarWarsServiceImpl(starWarsApi)

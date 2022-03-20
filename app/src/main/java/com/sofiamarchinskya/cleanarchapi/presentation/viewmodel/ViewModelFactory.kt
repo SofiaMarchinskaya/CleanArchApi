@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import javax.inject.Inject
 
-class PeopleListViewModelFactory @Inject constructor(val repository: StarWarsRepository) : ViewModelProvider.Factory {
+class PeopleListViewModelFactory (val repository: StarWarsRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PeopleListViewModel(repository) as T
     }
 }
 
-class PersonDetailsViewModelFactory@Inject constructor(val repository: StarWarsRepository) :
+class PersonDetailsViewModelFactory(val repository: StarWarsRepository) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
