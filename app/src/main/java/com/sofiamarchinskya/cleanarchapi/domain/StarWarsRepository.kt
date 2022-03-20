@@ -1,15 +1,22 @@
 package com.sofiamarchinskya.cleanarchapi.domain
 
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.LiveData
+import com.sofiamarchinskya.cleanarchapi.data.Person
+import com.sofiamarchinskya.cleanarchapi.data.Result
 
 interface StarWarsRepository {
 
-    suspend fun getPersonList(): List<DomainPersonModel>
+    fun observePersonList(): LiveData<Result<List<Person>>>
 
-    fun getFavoritesList(): Flow<List<DomainPersonModel>>
+    suspend fun getPersonList(forceUpdate: Boolean = false): Result<List<Person>>
 
-    suspend fun addPersonToFavorite(personModel: DomainPersonModel)
+    suspend fun refreshPersonList()
 
-    suspend fun delete(url: String)
+    suspend fun getPerson(url: String, forceUpdate: Boolean = false): Result<Person>
+
+    suspend fun makeFavorite(person: Person)
+
+    suspend fun deleteFromFavorite(person: Person)
+
+    suspend fun clearFavorites()
 }

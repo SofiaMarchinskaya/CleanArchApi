@@ -1,37 +1,70 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
-import com.sofiamarchinskya.cleanarchapi.data.net.PersonServerModel
+import androidx.lifecycle.LiveData
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StarWarsRepositoryImpl @Inject constructor(
     private val starWarsService: StarWarsService,
-    private val storage: PersonStorage
+    private val storage: PersonStorage,
 ) : StarWarsRepository {
 
-    override suspend fun getPersonList(): List<DomainPersonModel> =
-        mapProducts(starWarsService.getPersonList())
-
-    override fun getFavoritesList(): Flow<List<DomainPersonModel>> =
-        storage.getAllFavorite()
-
-    override suspend fun addPersonToFavorite(personModel: DomainPersonModel) {
-        storage.insert(
-            personModel.toFavoriteEntity()
-        )
+    override fun observePersonList(): LiveData<Result<List<Person>>> {
+        return storage.observePersonList()
     }
 
-    override suspend fun delete(url: String) {
-        storage.delete(url)
+    override suspend fun getPersonList(forceUpdate: Boolean): Result<List<Person>> {
+        if (forceUpdate) {
+            try {
+                updateTasksFromRemoteDataSource()
+            } catch (ex: Exception) {
+                return Result.Error(ex)
+            }
+        }
+        return storage.getPersonList()
     }
 
-    private suspend fun mapProducts(personServerList: List<PersonServerModel>): List<DomainPersonModel> {
-        return personServerList.map {
-            DataPerson(it, storage.isFavorite(it.url)).toDomainPersonModel()
+    private suspend fun updateTasksFromRemoteDataSource() {
+            val remoteTasks = starWarsService.getPersonList()
+
+            if (remoteTasks is Result.Success) {
+                remoteTasks.data.forEach { task ->
+                    storage.addPerson(task)
+                }
+            } else if (remoteTasks is Result.Error) {
+                throw remoteTasks.exception
+            }
+    }
+
+    override suspend fun refreshPersonList() {
+
+    }
+
+    override suspend fun getPerson(taskId: String, forceUpdate: Boolean): Result<Person> {
+        return storage.getPerson(taskId)
+    }
+
+    override suspend fun makeFavorite(person: Person) {
+        coroutineScope {
+            launch {
+                storage.addFavorites(person)
+            }
+        }
+    }
+
+    override suspend fun deleteFromFavorite(person: Person) {
+        coroutineScope {
+            launch { storage.deleteFromFavorites(person) }
+        }
+    }
+
+    override suspend fun clearFavorites() {
+        coroutineScope {
+            launch { storage.clearFavorites() }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
-import com.sofiamarchinskya.cleanarchapi.data.net.PersonServerModel
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import kotlinx.coroutines.flow.Flow

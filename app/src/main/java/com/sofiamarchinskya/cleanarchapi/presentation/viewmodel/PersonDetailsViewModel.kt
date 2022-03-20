@@ -1,17 +1,17 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
+
 import androidx.lifecycle.ViewModel
-import com.sofiamarchinskya.cleanarchapi.domain.StarWarsInteractor
-import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
-import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
+import com.sofiamarchinskya.cleanarchapi.data.Person
+import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 
-class PersonDetailsViewModel(private val interactor: StarWarsInteractor) : ViewModel() {
+class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewModel() {
 
-    suspend fun addToFavourites(person: UIModel) {
-        interactor.insertFavorites(person.toDomainPersonModel())
+    suspend fun addToFavourites(person: Person) {
+        repository.makeFavorite(person)
     }
 
-    suspend fun deleteFromFav(url: String) {
-        interactor.removeFromFavorites(url)
+    suspend fun deleteFromFav(person: Person) {
+        repository.deleteFromFavorite(person)
     }
 }

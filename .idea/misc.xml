@@ -14,12 +14,20 @@
         <entry key="..\:/AndroidProg/CleanArchApi/app/src/main/res/layout/fragment_person_details.xml" value="0.2140625" />
         <entry key="..\:/AndroidProg/CleanArchApi/app/src/main/res/layout/person_item.xml" value="0.22826086956521738" />
         <entry key="..\:/AndroidProg/CleanArchApi/app/src/main/res/menu/bottom_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/drawable/favorite_icon.xml" value="0.1" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/drawable/ic_check_circle_96dp.xml" value="0.1" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/drawable/ic_verified_user_96dp.xml" value="0.1" />
         <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/fragment_favourite.xml" value="0.10157041540020263" />
         <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/fragment_favourite_list.xml" value="0.1" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/fragment_list.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/fragment_main_list.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/fragment_people_list.xml" value="0.21467391304347827" />
         <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/fragment_person_details.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/list_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/layout/person_item.xml" value="0.12273550724637682" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/menu/filter_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/bsc-smarchinskaya/AndroidStudioProjects/CleanArchApi/app/src/main/res/menu/people_frag_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

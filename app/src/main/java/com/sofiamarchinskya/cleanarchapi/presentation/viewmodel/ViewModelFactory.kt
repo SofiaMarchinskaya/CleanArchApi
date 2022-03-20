@@ -4,25 +4,20 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sofiamarchinskya.cleanarchapi.domain.StarWarsInteractor
+import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import javax.inject.Inject
 
-class PeopleListViewModelFactory(val interactor: StarWarsInteractor) : ViewModelProvider.Factory {
+class PeopleListViewModelFactory @Inject constructor(val repository: StarWarsRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return PeopleListViewModel(interactor) as T
+        return PeopleListViewModel(repository) as T
     }
 }
 
-class FavoritesListViewModelFactory(val interactor: StarWarsInteractor) : ViewModelProvider.Factory {
+class PersonDetailsViewModelFactory@Inject constructor(val repository: StarWarsRepository) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return FavoritesListViewModel(interactor) as T
-    }
-}
-
-class PersonDetailsViewModelFactory(val interactor: StarWarsInteractor) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return PersonDetailsViewModel(interactor) as T
+        return PersonDetailsViewModel(repository) as T
     }
 }

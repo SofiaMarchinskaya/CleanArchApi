@@ -2,10 +2,11 @@ package com.sofiamarchinskya.cleanarchapi.data.storage.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.sofiamarchinskya.cleanarchapi.data.Person
 
 @Database(
     entities = [
-        FavoriteEntity::class,
+        Person::class,
     ],
     version = 1
 )

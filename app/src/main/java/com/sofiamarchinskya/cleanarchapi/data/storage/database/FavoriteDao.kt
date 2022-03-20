@@ -1,23 +1,31 @@
 package com.sofiamarchinskya.cleanarchapi.data.storage.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.sofiamarchinskya.cleanarchapi.data.Person
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDao {
 
-    @Query("DELETE  FROM favorite WHERE url = :url")
-    suspend fun deleteByUrl(url: String)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavorite(item: FavoriteEntity)
+    @Query("SELECT * FROM favorite")
+    fun observePeople(): LiveData<List<Person>>
 
     @Query("SELECT * FROM favorite")
-    fun getAllFavorite(): Flow<List<FavoriteEntity>>
+    suspend fun getPeople(): List<Person>
 
-    @Query("SELECT EXISTS (SELECT 1 FROM favorite WHERE url = :url)")
-    suspend fun exists(url: String): Boolean
+    @Query("SELECT * FROM favorite WHERE url = :url")
+    suspend fun getPersonById(url: String):Person?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPerson(person: Person)
+
+    @Query("UPDATE favorite SET isfavorite = :isFavorite WHERE url = :url")
+    suspend fun updateFavorites(url: String, isFavorite: Boolean)
+
+    @Query("DELETE FROM favorite WHERE url = :url")
+    suspend fun deletePerson(url: String): Int
+
+    @Query("DELETE FROM favorite WHERE isfavorite = 1")
+    suspend fun deleteFavorites(): Int
 }

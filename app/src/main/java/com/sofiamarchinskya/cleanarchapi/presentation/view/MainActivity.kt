@@ -1,39 +1,21 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.viewpager2.widget.ViewPager2
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.databinding.ActivityMainBinding
-import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.StarWarsPagerAdapter
-import com.sofiamarchinskya.cleanarchapi.utils.Constants
+import com.sofiamarchinskya.cleanarchapi.databinding.ListActivityBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var pagerAdapter: StarWarsPagerAdapter
+    private lateinit var binding: ListActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ListActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        pagerAdapter = StarWarsPagerAdapter(this)
-        binding.apply {
-            pager.adapter = pagerAdapter
-            bottomNavigation.setOnItemSelectedListener { item ->
-                pager.currentItem = item.order
-                true
-            }
-            pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    bottomNavigation.menu.getItem(position).isChecked = true
-                }
-            })
-        }
+        setSupportActionBar(findViewById(R.id.toolbar))
     }
 }
+// Keys for navigation
+const val DELETE_RESULT_OK = Activity.RESULT_FIRST_USER + 1
+const val EDIT_RESULT_OK = Activity.RESULT_FIRST_USER + 2

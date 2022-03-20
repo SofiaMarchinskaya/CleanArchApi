@@ -1,16 +1,25 @@
 package com.sofiamarchinskya.cleanarchapi.data.storage
 
-import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteEntity
-import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
+import androidx.lifecycle.LiveData
+import com.sofiamarchinskya.cleanarchapi.data.Person
+import com.sofiamarchinskya.cleanarchapi.data.Result
 import kotlinx.coroutines.flow.Flow
 
 interface PersonStorage {
 
-    fun getAllFavorite(): Flow<List<DomainPersonModel>>
+    fun observePersonList(): LiveData<Result<List<Person>>>
 
-    suspend fun insert(personModel: FavoriteEntity)
+    suspend fun getPersonList(): Result<List<Person>>
 
-    suspend fun isFavorite(url: String): Boolean
+    suspend fun getPerson(url: String): Result<Person>
 
-    suspend fun delete(url: String)
+    suspend fun addFavorites(person: Person)
+
+    suspend fun deleteFromFavorites(person: Person)
+
+    suspend fun clearFavorites()
+
+    suspend fun addPerson(person: Person)
+
+    suspend fun deletePerson(url: String)
 }

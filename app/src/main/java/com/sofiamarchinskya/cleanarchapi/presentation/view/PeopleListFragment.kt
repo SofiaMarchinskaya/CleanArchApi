@@ -1,27 +1,20 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.sofiamarchinskya.cleanarchapi.utils.Constants
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.app.App
+import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
-import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
+import com.sofiamarchinskya.cleanarchapi.utils.Constants
 import javax.inject.Inject
 
 class PeopleListFragment : Fragment() {
@@ -31,44 +24,70 @@ class PeopleListFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: PeopleListViewModelFactory
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val broadCastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(contxt: Context?, intent: Intent?) {
-                when (intent?.action) {
-                    Constants.ITEM_CHANGED -> viewModel.getList()
-                }
-            }
-        }
-        LocalBroadcastManager.getInstance(requireContext())
-            .registerReceiver(broadCastReceiver, IntentFilter(Constants.ITEM_CHANGED))
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (requireActivity().applicationContext as App).appComponent.inject(this)
         viewModel =
             ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java]
-        peopleAdapter = PeopleListAdapter(viewModel::onAboutItemClicked)
-        binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false).apply {
-            peopleList.layoutManager = LinearLayoutManager(requireContext())
-            peopleList.adapter = peopleAdapter
-        }
-        viewModel.apply {
-            getList()
-            personList.observe(viewLifecycleOwner) {
-                peopleAdapter.update(it)
-            }
-        }
-        viewModel.onNoteItemClickEvent.observe(viewLifecycleOwner) {
-            openAboutPersonFragment(it)
-        }
+        peopleAdapter = PeopleListAdapter()
+        binding =  FragmentPeopleListBinding.inflate(layoutInflater, container, false)
+        setHasOptionsMenu(true)
+        setupSnackbar()
+        setupNavigation()
         return binding.root
     }
 
-    private fun openAboutPersonFragment(data: UIModel) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.people_frag_menu, menu)
+    }
+
+    private fun setupSnackbar() {
+        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        //arguments?.let {
+        //    viewModel.showEditResultMessage(args.userMessage)
+        //}
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean=
+        when (item.itemId) {
+            R.id.menu_clear -> {
+                //viewModel.clearCompletedTasks()
+                true
+            }
+            R.id.menu_filter -> {
+                showFilteringPopUpMenu()
+                true
+            }
+            else -> false
+        }
+
+    private fun showFilteringPopUpMenu() {
+        val view = activity?.findViewById<View>(R.id.menu_filter) ?: return
+        PopupMenu(requireContext(), view).run {
+            menuInflater.inflate(R.menu.filter_menu, menu)
+
+            setOnMenuItemClickListener {
+//                viewModel.setFiltering(
+//                    when (it.itemId) {
+//                        R.id.active -> FilterType.ALL_PEOPLE
+//                        R.id.completed -> FilterType.FAVORITES
+//                        else -> TasksFilterType.ALL_TASKS
+//                    }
+//                )
+                true
+            }
+            show()
+        }
+    }
+    private fun setupNavigation() {
+//        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
+//            openTaskDetails(it)
+//        })
+//
+    }
+    private fun openAboutPersonFragment(data:Person) {
         view?.findNavController()?.navigate(
             R.id.action_peopleListFragment_to_personDetailsFragment,
             bundleOf(Constants.PERSON_DATA to data)

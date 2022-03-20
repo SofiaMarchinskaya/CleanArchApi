@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.databinding.PersonItemBinding
-import com.sofiamarchinskya.cleanarchapi.presentation.model.UIModel
 
 class PeopleListAdapter(
-    private var onClick: (UIModel) -> Unit
+  //  private var onClick: (UIModel) -> Unit
 ) :
     RecyclerView.Adapter<PeopleListAdapter.PersonViewHolder>() {
-    private var list: List<UIModel> = ArrayList()
+    private var list: List<Person> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder =
         PersonViewHolder(
@@ -22,7 +22,7 @@ class PeopleListAdapter(
         holder.bind(list[position])
     }
 
-    fun update(list: List<UIModel>) {
+    fun update(list: List<Person>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -31,13 +31,14 @@ class PeopleListAdapter(
 
     inner class PersonViewHolder(private val binding: PersonItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: UIModel) {
+        fun bind(data: Person) {
             binding.apply {
                 name.text = data.name
-                if (data.isFavourite)
+                if (data.isfavorite)
                     star.visibility = View.VISIBLE
                 else star.visibility = View.INVISIBLE
-                root.setOnClickListener { onClick.invoke(data) }
+                root.setOnClickListener {// onClick.invoke(data) }
+                }
             }
         }
     }

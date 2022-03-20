@@ -4,4 +4,16 @@
     <string name="favourite">favourite</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loading_tasks_error">Error loading</string>
+    <string name="successfully_saved_task_message">saved</string>
+    <string name="successfully_deleted_task_message">deleted</string>
+    <string name="task_marked_complete">added to fav</string>
+    <string name="task_marked_active">remove from favorites</string>
+    <string name="completed_tasks_cleared">clear fav</string>
+    <string name="label_all">all</string>
+    <string name="no_tasks_all">no all</string>
+    <string name="label_active">fav</string>
+    <string name="no_tasks_active">no fav\'</string>
+    <string name="label_completed">not fav</string>
+    <string name="no_tasks_completed">no fav</string>
 </resources>

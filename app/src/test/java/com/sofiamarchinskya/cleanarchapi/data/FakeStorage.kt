@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
-import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteEntity
 import com.sofiamarchinskya.cleanarchapi.domain.model.DomainPersonModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
