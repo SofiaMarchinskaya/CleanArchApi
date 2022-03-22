@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
@@ -13,40 +12,40 @@ import kotlinx.coroutines.launch
 
 class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewModel() {
 
-    private val _taskId = MutableLiveData<String>()
+    private val _url = MutableLiveData<String>()
 
     val _snackbarText = SingleLiveEvent<Int>()
 
-    private val _task = _taskId.switchMap { taskId ->
-        repository.observePerson(taskId).map { computeResult(it) }
+    private val _person = _url.switchMap { url ->
+        repository.observePerson(url).map { computeResult(it) }
     }
 
-    val task: LiveData<Person?> = _task
+    val person: LiveData<Person?> = _person
 
-    fun start(taskId: String) {
+    fun start(url: String) {
         // If we're already loading or already loaded, return (might be a config change)
-        if (taskId == _taskId.value) {
+        if (url == _url.value) {
             return
         }
         // Trigger the load
-        _taskId.value = taskId
+        _url.value = url
     }
 
-    private fun computeResult(taskResult: Result<Person>): Person? {
-        return if (taskResult is Result.Success) {
-            taskResult.data
+    private fun computeResult(res: Result<Person>): Person? {
+        return if (res is Result.Success) {
+            res.data
         } else {
             null
         }
     }
 
     fun addFavorites(isFavorite: Boolean) = viewModelScope.launch {
-        val task = _task.value ?: return@launch
+        val person = _person.value ?: return@launch
         if (isFavorite) {
-            repository.makeFavorite(task)
+            repository.makeFavorite(person)
             showSnackbarMessage(R.string.add_to_favorites)
         } else {
-            repository.deleteFromFavorite(task)
+            repository.deleteFromFavorite(person)
             showSnackbarMessage(R.string.remove_from_favorite)
         }
     }

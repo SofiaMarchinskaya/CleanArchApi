@@ -42,7 +42,7 @@ class PersonDetailsFragment : Fragment() {
         if (args != null) {
             viewModel.start(args)
         }
-        viewModel.task.observe(viewLifecycleOwner) {
+        viewModel.person.observe(viewLifecycleOwner) {
             binding.apply {
                 birthYear.text = it?.birth_year
                 skinColor.text = it?.skin_color

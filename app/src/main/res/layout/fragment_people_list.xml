@@ -1,54 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_layout"
+    android:id="@+id/list_linear_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/tasks_linear_layout"
+    <TextView
+        android:id="@+id/filtering_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/filtering_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/list_item_padding"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/list_item_padding"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tasks_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/no_tasks_layout"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:layout_marginLeft="@dimen/list_item_padding"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/list_item_padding"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <ImageView
-            android:id="@+id/no_tasks_icon"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_gravity="center"
-            android:contentDescription="no_tasks_image_content_description" />
-
-        <TextView
-            android:id="@+id/no_tasks_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/list_item_padding" />
-    </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/person_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+</LinearLayout>

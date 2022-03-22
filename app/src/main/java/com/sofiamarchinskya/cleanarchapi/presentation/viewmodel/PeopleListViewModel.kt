@@ -35,8 +35,6 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
 
     private var currentFiltering = FilterType.ALL_PEOPLE
 
-    private val isDataLoadingError = MutableLiveData<Boolean>()
-
     val openPersonDetailsEvent = SingleLiveEvent<String>()
 
     init {
@@ -93,8 +91,8 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
         }
     }
 
-    fun openPersonDetails(taskId: String) {
-        openPersonDetailsEvent.value = taskId
+    fun openPersonDetails(url: String) {
+        openPersonDetailsEvent.value = url
     }
 
     private fun showSnackbarMessage(message: Int) {
@@ -106,14 +104,12 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
         val result = MutableLiveData<List<Person>>()
 
         if (personListResult is Result.Success) {
-            isDataLoadingError.value = false
             viewModelScope.launch {
                 result.value = filterItems(personListResult.data, currentFiltering)
             }
         } else {
             result.value = emptyList()
             showSnackbarMessage(R.string.loading_error)
-            isDataLoadingError.value = true
         }
 
         return result

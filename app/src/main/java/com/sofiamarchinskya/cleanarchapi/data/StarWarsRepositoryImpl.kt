@@ -20,7 +20,7 @@ class StarWarsRepositoryImpl @Inject constructor(
     override suspend fun getPersonList(forceUpdate: Boolean): Result<List<Person>> {
         if (forceUpdate) {
             try {
-                updateTasksFromRemoteDataSource()
+                updateListFromRemoteDataSource()
             } catch (ex: Exception) {
                 return Result.Error(ex)
             }
@@ -28,14 +28,14 @@ class StarWarsRepositoryImpl @Inject constructor(
         return storage.getPersonList()
     }
 
-    private suspend fun updateTasksFromRemoteDataSource() {
-        val remoteTasks = starWarsService.getPersonList()
-        if (remoteTasks is Result.Success) {
-            remoteTasks.data.forEach { task ->
-                storage.addPerson(task)
+    private suspend fun updateListFromRemoteDataSource() {
+        val remote = starWarsService.getPersonList()
+        if (remote is Result.Success) {
+            remote.data.forEach { person ->
+                storage.addPerson(person)
             }
-        } else if (remoteTasks is Result.Error) {
-            throw remoteTasks.exception
+        } else if (remote is Result.Error) {
+            throw remote.exception
         }
     }
 
@@ -51,8 +51,8 @@ class StarWarsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPerson(taskId: String, forceUpdate: Boolean): Result<Person> {
-        return storage.getPerson(taskId)
+    override suspend fun getPerson(url: String, forceUpdate: Boolean): Result<Person> {
+        return storage.getPerson(url)
     }
 
     override suspend fun makeFavorite(person: Person) {

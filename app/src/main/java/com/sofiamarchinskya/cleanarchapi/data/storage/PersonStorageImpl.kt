@@ -36,7 +36,7 @@ class PersonStorageImpl @Inject constructor(
             if (person != null) {
                 return@withContext Result.Success(person)
             } else {
-                return@withContext Result.Error(Exception("Task not found!"))
+                return@withContext Result.Error(Exception("Information not found!"))
             }
         } catch (e: Exception) {
             return@withContext Result.Error(e)

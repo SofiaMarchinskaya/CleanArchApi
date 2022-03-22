@@ -37,7 +37,7 @@ class PeopleListFragment : Fragment() {
         viewModel.items.observe(viewLifecycleOwner) {
             peopleAdapter.update(it)
         }
-        binding.tasksList.adapter = peopleAdapter
+        binding.personList.adapter = peopleAdapter
         viewModel.currentFilteringLabel.observe(viewLifecycleOwner) {
             binding.filteringText.text = getString(it)
         }
