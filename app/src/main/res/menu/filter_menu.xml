@@ -5,8 +5,8 @@
         android:title="all" />
     <item
         android:id="@+id/active"
-        android:title="fav" />
+        android:title="favorite" />
     <item
         android:id="@+id/completed"
-        android:title="notfav" />
+        android:title="other" />
 </menu>
