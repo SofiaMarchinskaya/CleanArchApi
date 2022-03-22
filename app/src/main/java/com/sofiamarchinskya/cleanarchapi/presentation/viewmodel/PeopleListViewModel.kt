@@ -1,66 +1,43 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
-import androidx.lifecycle.Transformations.switchMap
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
-import com.sofiamarchinskya.cleanarchapi.data.succeeded
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
-import com.sofiamarchinskya.cleanarchapi.presentation.view.DELETE_RESULT_OK
-import com.sofiamarchinskya.cleanarchapi.presentation.view.EDIT_RESULT_OK
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
-import kotlinx.coroutines.flow.switchMap
 import kotlinx.coroutines.launch
+import kotlin.Exception
 
 class PeopleListViewModel(private val repository: StarWarsRepository) : ViewModel() {
-    //Список TODO
-    private val _forceUpdate = MutableLiveData(false)
-    private val _items: LiveData<List<Person>> = _forceUpdate.switchMap { forceUpdate ->
+    private val update = MutableLiveData(false)
+    private val _items: LiveData<List<Person>> = update.switchMap { forceUpdate ->
         if (forceUpdate) {
-            _dataLoading.value = true
             viewModelScope.launch {
-                repository.refreshPersonList()
-                _dataLoading.value = false
+                try {
+                    repository.refreshPersonList()
+                }catch (e: Exception){
+                    showSnackbarMessage(R.string.loading_error)
+                }
             }
         }
         repository.observePersonList().switchMap { filterList(it) }
     }
     val items: LiveData<List<Person>> = _items
 
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
 
     private val _currentFilteringLabel = MutableLiveData<Int>()
     val currentFilteringLabel: LiveData<Int> = _currentFilteringLabel
 
-    private val _noTasksLabel = MutableLiveData<Int>()
-    val noTasksLabel: LiveData<Int> = _noTasksLabel
-
-    private val _noTaskIconRes = MutableLiveData<Int>()
-    val noTaskIconRes: LiveData<Int> = _noTaskIconRes
-
-    private val _tasksAddViewVisible = MutableLiveData<Boolean>()
-    val tasksAddViewVisible: LiveData<Boolean> = _tasksAddViewVisible
-
-    val _snackbarText = SingleLiveEvent<Int>()
+    val snackbarText = SingleLiveEvent<Int>()
 
     private var currentFiltering = FilterType.ALL_PEOPLE
 
-    // Not used at the moment
     private val isDataLoadingError = MutableLiveData<Boolean>()
 
-   val _openPersonDetailsEvent = SingleLiveEvent<String>()
-
-    private var resultMessageShown: Boolean = false
-
-    // This LiveData depends on another so we can use a transformation.
-    val empty: LiveData<Boolean> = Transformations.map(_items) {
-        it.isEmpty()
-    }
+    val openPersonDetailsEvent = SingleLiveEvent<String>()
 
     init {
         setFiltering(FilterType.ALL_PEOPLE)
@@ -72,77 +49,58 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
         when (requestType) {
             FilterType.ALL_PEOPLE -> {
                 setFilter(
-                    R.string.label_all, R.string.no_tasks_all,
-                    R.drawable.logo_no_fill, true
+                    R.string.all_label
                 )
             }
-           FilterType.FAVORITES -> {
+            FilterType.FAVORITES -> {
                 setFilter(
-                    R.string.label_active, R.string.no_tasks_active,
-                    R.drawable.ic_check_circle_96dp, false
+                    R.string.fav_label
                 )
             }
-          FilterType.NOT_FAVORITE -> {
+            FilterType.NOT_FAVORITE -> {
                 setFilter(
-                    R.string.label_completed, R.string.no_tasks_completed,
-                    R.drawable.ic_verified_user_96dp, false
+                    R.string.not_fav_label
                 )
             }
         }
-         loadPersonList(false)
+        loadPersonList(false)
     }
-    fun loadPersonList(forceUpdate: Boolean) {
-        _forceUpdate.value = forceUpdate
+
+    private fun loadPersonList(forceUpdate: Boolean) {
+        update.value = forceUpdate
     }
 
     private fun setFilter(
-        @StringRes filteringLabelString: Int, @StringRes noTasksLabelString: Int,
-        @DrawableRes noTaskIconDrawable: Int, tasksAddVisible: Boolean
+        @StringRes filteringLabelString: Int
     ) {
         _currentFilteringLabel.value = filteringLabelString
-        _noTasksLabel.value = noTasksLabelString
-        _noTaskIconRes.value = noTaskIconDrawable
-        _tasksAddViewVisible.value = tasksAddVisible
     }
 
     fun clearFavorites() {
         viewModelScope.launch {
-           repository.clearFavorites()
-            showSnackbarMessage(R.string.completed_tasks_cleared)
+            repository.clearFavorites()
+            showSnackbarMessage(R.string.clear_favorites)
         }
     }
 
-    //Удаление или добавление в избранное
     fun addFavorites(person: Person, completed: Boolean) = viewModelScope.launch {
         if (completed) {
             repository.makeFavorite(person)
-            showSnackbarMessage(R.string.task_marked_complete)
+            showSnackbarMessage(R.string.add_to_favorites)
         } else {
             repository.deleteFromFavorite(person)
-            showSnackbarMessage(R.string.task_marked_active)
+            showSnackbarMessage(R.string.remove_from_favorite)
         }
     }
 
-
-    //открыть подробную информацию
     fun openPersonDetails(taskId: String) {
-        _openPersonDetailsEvent.value = taskId
-    }
-
-    fun showEditResultMessage(result: Int) {
-        if (resultMessageShown) return
-        when (result) {
-            EDIT_RESULT_OK -> showSnackbarMessage(R.string.successfully_saved_task_message)
-            DELETE_RESULT_OK -> showSnackbarMessage(R.string.successfully_deleted_task_message)
-        }
-        resultMessageShown = true
+        openPersonDetailsEvent.value = taskId
     }
 
     private fun showSnackbarMessage(message: Int) {
-        _snackbarText.value = message
+        snackbarText.value = message
     }
 
-    //Фильтрация элементов списка
     private fun filterList(personListResult: Result<List<Person>>): LiveData<List<Person>> {
 
         val result = MutableLiveData<List<Person>>()
@@ -154,7 +112,7 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
             }
         } else {
             result.value = emptyList()
-            showSnackbarMessage(R.string.loading_tasks_error)
+            showSnackbarMessage(R.string.loading_error)
             isDataLoadingError.value = true
         }
 

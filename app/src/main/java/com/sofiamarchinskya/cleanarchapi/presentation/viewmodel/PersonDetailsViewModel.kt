@@ -20,7 +20,7 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
     private val _task = _taskId.switchMap { taskId ->
         repository.observePerson(taskId).map { computeResult(it) }
     }
-    
+
     val task: LiveData<Person?> = _task
 
     fun start(taskId: String) {
@@ -36,7 +36,6 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
         return if (taskResult is Result.Success) {
             taskResult.data
         } else {
-            Log.d("БЫК",taskResult.toString())
             null
         }
     }
@@ -45,10 +44,10 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
         val task = _task.value ?: return@launch
         if (isFavorite) {
             repository.makeFavorite(task)
-            showSnackbarMessage(R.string.task_marked_complete)
+            showSnackbarMessage(R.string.add_to_favorites)
         } else {
             repository.deleteFromFavorite(task)
-            showSnackbarMessage(R.string.task_marked_active)
+            showSnackbarMessage(R.string.remove_from_favorite)
         }
     }
 

@@ -1,8 +1,8 @@
 package com.sofiamarchinskya.cleanarchapi.data.net
 
-import android.accounts.NetworkErrorException
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
+
 class StarWarsServiceImpl(private val starWarsApi: StarWarsApi) : StarWarsService {
 
     override suspend fun getPersonList(): Result<List<Person>> {
@@ -13,12 +13,12 @@ class StarWarsServiceImpl(private val starWarsApi: StarWarsApi) : StarWarsServic
                 body?.let { resp ->
                     return Result.Success(resp.results)
                 }
-                throw NetworkErrorException("No Data")
+                return Result.Error(Exception("No data"))
             } else {
-                throw Exception(response.errorBody().toString())
+                return Result.Error(Exception((response.errorBody().toString())))
             }
         } catch (e: Exception) {
-            throw NetworkErrorException("Server error + ${e.message}")
+            return Result.Error(e)
         }
     }
 }

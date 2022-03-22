@@ -1,8 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +55,7 @@ class PersonDetailsFragment : Fragment() {
                 checkBox.isChecked = it?.isfavorite == true
             }
         }
-        viewModel._snackbarText.observe(viewLifecycleOwner){
+        viewModel._snackbarText.observe(viewLifecycleOwner) {
             showSnackBar(getString(it))
         }
         binding.checkBox.setOnClickListener {
@@ -66,7 +64,7 @@ class PersonDetailsFragment : Fragment() {
         return binding.root
     }
 
-    private fun showSnackBar(msg:String){
+    private fun showSnackBar(msg: String) {
         view?.let {
             Snackbar.make(
                 it, msg,
@@ -74,5 +72,4 @@ class PersonDetailsFragment : Fragment() {
             ).show()
         }
     }
-
 }

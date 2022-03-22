@@ -41,7 +41,7 @@ class PeopleListFragment : Fragment() {
         viewModel.currentFilteringLabel.observe(viewLifecycleOwner) {
             binding.filteringText.text = getString(it)
         }
-        viewModel._snackbarText.observe(viewLifecycleOwner) {
+        viewModel.snackbarText.observe(viewLifecycleOwner) {
             showSnackbar(getString(it))
         }
         setupNavigation()
@@ -94,7 +94,7 @@ class PeopleListFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-        viewModel._openPersonDetailsEvent.observe(viewLifecycleOwner) {
+        viewModel.openPersonDetailsEvent.observe(viewLifecycleOwner) {
             openAboutPersonFragment(it)
         }
 
