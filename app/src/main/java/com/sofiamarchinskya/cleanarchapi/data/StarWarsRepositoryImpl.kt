@@ -15,8 +15,8 @@ class StarWarsRepositoryImpl @Inject constructor(
         return storage.observePersonList()
     }
 
-    override suspend fun getPersonList(forceUpdate: Boolean): Result<List<Person>> {
-        if (forceUpdate) {
+    override suspend fun getPersonList(update: Boolean): Result<List<Person>> {
+        if (update) {
             try {
                 refreshPersonList()
             } catch (ex: Exception) {
@@ -36,10 +36,6 @@ class StarWarsRepositoryImpl @Inject constructor(
         } else if (res is Result.Error) {
             throw res.exception
         }
-    }
-
-    override suspend fun getPerson(url: String, forceUpdate: Boolean): Result<Person> {
-        return storage.getPerson(url)
     }
 
     override suspend fun makeFavorite(person: Person) {

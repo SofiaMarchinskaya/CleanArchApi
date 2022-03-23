@@ -11,10 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sofiamarchinskya.cleanarchapi.app.App
-import com.sofiamarchinskya.cleanarchapi.app.EventObserver
+import com.sofiamarchinskya.cleanarchapi.EventObserver
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPersonDetailsBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModelFactory
+import com.sofiamarchinskya.cleanarchapi.utils.Constants
 import javax.inject.Inject
 
 class PersonDetailsFragment : Fragment() {
@@ -38,7 +39,7 @@ class PersonDetailsFragment : Fragment() {
         (requireActivity().applicationContext as App).appComponent.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory)[PersonDetailsViewModel::class.java]
         binding = FragmentPersonDetailsBinding.inflate(inflater, container, false)
-        val args = arguments?.getString("url")
+        val args = arguments?.getString(Constants.PERSON_URL)
 
         if (args != null) {
             viewModel.start(args)

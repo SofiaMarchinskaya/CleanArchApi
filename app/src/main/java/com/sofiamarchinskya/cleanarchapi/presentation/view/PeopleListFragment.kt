@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
@@ -11,11 +10,12 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.app.App
-import com.sofiamarchinskya.cleanarchapi.app.EventObserver
+import com.sofiamarchinskya.cleanarchapi.EventObserver
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
+import com.sofiamarchinskya.cleanarchapi.utils.Constants
 import javax.inject.Inject
 
 class PeopleListFragment : Fragment() {
@@ -103,7 +103,7 @@ class PeopleListFragment : Fragment() {
 
     private fun openAboutPersonFragment(url: String) {
         view?.findNavController()?.navigate(
-            R.id.action_peopleListFragment_to_personDetailsFragment, bundleOf("url" to url)
+            R.id.action_peopleListFragment_to_personDetailsFragment, bundleOf(Constants.PERSON_URL to url)
         )
     }
 }

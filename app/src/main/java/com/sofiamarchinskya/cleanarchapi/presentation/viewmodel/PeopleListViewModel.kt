@@ -3,7 +3,7 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.app.Event
+import com.sofiamarchinskya.cleanarchapi.Event
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
@@ -83,8 +83,8 @@ class PeopleListViewModel(
         }
     }
 
-    fun addFavorites(person: Person, completed: Boolean) = viewModelScope.launch {
-        if (completed) {
+    fun addFavorites(person: Person, isFavorite: Boolean) = viewModelScope.launch {
+        if (isFavorite) {
             repository.makeFavorite(person)
             showSnackbarMessage(R.string.add_to_favorites)
         } else {

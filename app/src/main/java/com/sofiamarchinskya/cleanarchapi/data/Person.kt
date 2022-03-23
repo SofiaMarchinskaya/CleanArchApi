@@ -1,10 +1,8 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
 
 @Entity(tableName = "favorite")
 data class Person(
@@ -18,5 +16,5 @@ data class Person(
     @SerializedName("gender") val gender: String,
     @SerializedName("homeworld") val homeworld: String,
     @SerializedName("url") @PrimaryKey val url: String,
-    @SerializedName("isfavorite") var isfavorite:Boolean = false
+    @SerializedName("isfavorite") var isfavorite: Boolean = false
 )

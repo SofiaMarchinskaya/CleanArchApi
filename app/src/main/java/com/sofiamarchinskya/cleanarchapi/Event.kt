@@ -1,4 +1,4 @@
-package com.sofiamarchinskya.cleanarchapi.app
+package com.sofiamarchinskya.cleanarchapi
 
 /*
  * Copyright (C) 2019 The Android Open Source Project

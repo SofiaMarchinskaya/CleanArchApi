@@ -1,6 +1,5 @@
 package com.sofiamarchinskya.cleanarchapi.data.storage
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.sofiamarchinskya.cleanarchapi.data.Person
@@ -30,19 +29,6 @@ class PersonStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPerson(url: String): Result<Person> = withContext(ioDispatcher) {
-        try {
-            val person = dao.getPersonById(url)
-            if (person != null) {
-                return@withContext Result.Success(person)
-            } else {
-                return@withContext Result.Error(Exception("Information not found!"))
-            }
-        } catch (e: Exception) {
-            return@withContext Result.Error(e)
-        }
-    }
-
     override suspend fun addPerson(person: Person) = withContext(ioDispatcher) {
         dao.insertPerson(person)
     }
@@ -50,7 +36,6 @@ class PersonStorageImpl @Inject constructor(
     override suspend fun addFavorites(person: Person) {
         withContext(ioDispatcher) {
             dao.updateFavorites(person.url, true)
-            Log.d("БЫК", "stor ${person.url}")
         }
     }
 

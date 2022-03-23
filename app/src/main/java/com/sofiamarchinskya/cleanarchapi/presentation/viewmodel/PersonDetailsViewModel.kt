@@ -4,7 +4,7 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.app.Event
+import com.sofiamarchinskya.cleanarchapi.Event
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository

@@ -3,7 +3,7 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sofiamarchinskya.cleanarchapi.MainCoroutineRule
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.app.Event
+import com.sofiamarchinskya.cleanarchapi.Event
 import com.sofiamarchinskya.cleanarchapi.data.FakeRepository
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.getOrAwaitValue

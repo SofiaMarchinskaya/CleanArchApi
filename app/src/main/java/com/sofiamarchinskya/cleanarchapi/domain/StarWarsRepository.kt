@@ -8,11 +8,9 @@ interface StarWarsRepository {
 
     fun observePersonList(): LiveData<Result<List<Person>>>
 
-    suspend fun getPersonList(forceUpdate: Boolean = false): Result<List<Person>>
+    suspend fun getPersonList(update: Boolean = false): Result<List<Person>>
 
     suspend fun refreshPersonList()
-
-    suspend fun getPerson(url: String, forceUpdate: Boolean = false): Result<Person>
 
     suspend fun makeFavorite(person: Person)
 
