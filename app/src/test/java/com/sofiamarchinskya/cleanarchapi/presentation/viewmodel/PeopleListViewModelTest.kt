@@ -1,7 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.sofiamarchinskya.cleanarchapi.MainCoroutineRule
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.app.Event
@@ -14,13 +13,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
 class PeopleListViewModelTest {
     private var repository = FakeRepository()
     private lateinit var viewModel: PeopleListViewModel
-    private lateinit var filteringLabelObserver: Observer<Int>
     private var list = mutableListOf<Person>()
     private val person1 = Person(
         name = "name1",
@@ -75,9 +72,7 @@ class PeopleListViewModelTest {
         list.add(person2)
         list.add(person3)
         repository.setPeopleData(list)
-        filteringLabelObserver = mock()
         viewModel = PeopleListViewModel(repository)
-        viewModel.currentFilteringLabel.observeForever(filteringLabelObserver)
     }
 
     @Test

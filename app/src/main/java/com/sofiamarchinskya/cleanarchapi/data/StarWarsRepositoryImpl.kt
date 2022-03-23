@@ -18,23 +18,12 @@ class StarWarsRepositoryImpl @Inject constructor(
     override suspend fun getPersonList(forceUpdate: Boolean): Result<List<Person>> {
         if (forceUpdate) {
             try {
-                updateListFromRemoteDataSource()
+                refreshPersonList()
             } catch (ex: Exception) {
                 return Result.Error(ex)
             }
         }
         return storage.getPersonList()
-    }
-
-    private suspend fun updateListFromRemoteDataSource() {
-        val remote = starWarsService.getPersonList()
-        if (remote is Result.Success) {
-            remote.data.forEach { person ->
-                storage.addPerson(person)
-            }
-        } else if (remote is Result.Error) {
-            throw remote.exception
-        }
     }
 
     override suspend fun refreshPersonList() {
@@ -56,7 +45,6 @@ class StarWarsRepositoryImpl @Inject constructor(
     override suspend fun makeFavorite(person: Person) {
         storage.addFavorites(person)
     }
-
 
     override suspend fun deleteFromFavorite(person: Person) {
         storage.deleteFromFavorites(person)
