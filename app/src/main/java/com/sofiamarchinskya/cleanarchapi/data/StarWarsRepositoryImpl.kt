@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StarWarsRepositoryImpl @Inject constructor(
     private val starWarsService: StarWarsService,
-    private val storage: PersonStorage,
+    private val storage: PersonStorage
 ) : StarWarsRepository {
 
     override fun observePersonList(): LiveData<Result<List<Person>>> {
@@ -56,23 +54,16 @@ class StarWarsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun makeFavorite(person: Person) {
-        coroutineScope {
-            launch {
-                storage.addFavorites(person)
-            }
-        }
+        storage.addFavorites(person)
     }
 
+
     override suspend fun deleteFromFavorite(person: Person) {
-        coroutineScope {
-            launch { storage.deleteFromFavorites(person) }
-        }
+        storage.deleteFromFavorites(person)
     }
 
     override suspend fun clearFavorites() {
-        coroutineScope {
-            launch { storage.clearFavorites() }
-        }
+        storage.clearFavorites()
     }
 
     override fun observePerson(url: String): LiveData<Result<Person>> {

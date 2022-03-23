@@ -4,17 +4,18 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
+import com.sofiamarchinskya.cleanarchapi.app.Event
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewModel() {
 
     private val _url = MutableLiveData<String>()
 
-    val _snackbarText = SingleLiveEvent<Int>()
+    private val _snackbarText = MutableLiveData<Event<Int>>()
+    val snackbarText: LiveData<Event<Int>> = _snackbarText
 
     private val _person = _url.switchMap { url ->
         repository.observePerson(url).map { computeResult(it) }
@@ -23,11 +24,9 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
     val person: LiveData<Person?> = _person
 
     fun start(url: String) {
-        // If we're already loading or already loaded, return (might be a config change)
         if (url == _url.value) {
             return
         }
-        // Trigger the load
         _url.value = url
     }
 
@@ -51,6 +50,6 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
     }
 
     private fun showSnackbarMessage(@StringRes message: Int) {
-        _snackbarText.value = message
+        _snackbarText.value = Event(message)
     }
 }

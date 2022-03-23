@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sofiamarchinskya.cleanarchapi.app.App
+import com.sofiamarchinskya.cleanarchapi.app.EventObserver
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPersonDetailsBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModel
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModelFactory
@@ -55,9 +56,9 @@ class PersonDetailsFragment : Fragment() {
                 checkBox.isChecked = it?.isfavorite == true
             }
         }
-        viewModel._snackbarText.observe(viewLifecycleOwner) {
+        viewModel.snackbarText.observe(viewLifecycleOwner, EventObserver {
             showSnackBar(getString(it))
-        }
+        })
         binding.checkBox.setOnClickListener {
             viewModel.addFavorites((it as CheckBox).isChecked)
         }

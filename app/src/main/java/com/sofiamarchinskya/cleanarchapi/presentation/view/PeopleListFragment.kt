@@ -1,6 +1,7 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
@@ -10,6 +11,7 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.app.App
+import com.sofiamarchinskya.cleanarchapi.app.EventObserver
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
@@ -41,9 +43,9 @@ class PeopleListFragment : Fragment() {
         viewModel.currentFilteringLabel.observe(viewLifecycleOwner) {
             binding.filteringText.text = getString(it)
         }
-        viewModel.snackbarText.observe(viewLifecycleOwner) {
+        viewModel.snackbarText.observe(viewLifecycleOwner, EventObserver {
             showSnackbar(getString(it))
-        }
+        })
         setupNavigation()
         return binding.root
     }
@@ -94,10 +96,9 @@ class PeopleListFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-        viewModel.openPersonDetailsEvent.observe(viewLifecycleOwner) {
+        viewModel.openPersonDetailsEvent.observe(viewLifecycleOwner, EventObserver {
             openAboutPersonFragment(it)
-        }
-
+        })
     }
 
     private fun openAboutPersonFragment(url: String) {

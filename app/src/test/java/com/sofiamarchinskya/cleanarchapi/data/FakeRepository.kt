@@ -1,65 +1,83 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 
-//class FakeRepository() : StarWarsRepository {
-//    private var peopleData: LinkedHashMap<String, DomainPersonModel> = LinkedHashMap()
-//    private val remoteList = listOf(
-//        PersonServerModel(
-//            name = "name1",
-//            height = 111,
-//            url = "url1",
-//            mass = 222,
-//            hair_color = "hair_color1",
-//            skin_color = "skin_color1",
-//            eye_color = "eye_color1",
-//            birth_year = "birth_year1",
-//            gender = "gender1",
-//            homeworld = "homeworld1"
-//        ), PersonServerModel(
-//            name = "name2",
-//            height = 112,
-//            url = "url2",
-//            mass = 223,
-//            hair_color = "hair_color2",
-//            skin_color = "skin_color2",
-//            eye_color = "eye_color2",
-//            birth_year = "birth_year2",
-//            gender = "gender2",
-//            homeworld = "homeworld2"
-//        ),
-//        PersonServerModel(
-//            name = "name3",
-//            height = 113,
-//            url = "url3",
-//            mass = 222,
-//            hair_color = "hair_color3",
-//            skin_color = "skin_color3",
-//            eye_color = "eye_color1",
-//            birth_year = "birth_year3",
-//            gender = "gender1",
-//            homeworld = "homewor3d1"
-//        )
-//    )
-//
-//    override suspend fun getPersonList(): List<DomainPersonModel> = mapProducts(remoteList)
-//
-//    override fun getFavoritesList(): Flow<List<DomainPersonModel>> = flow {
-//        emit(peopleData.values.toList())
-//    }
-//
-//    override suspend fun addPersonToFavorite(personModel: DomainPersonModel) {
-//        peopleData[personModel.url] = personModel
-//    }
-//
-//    override suspend fun delete(url: String) {
-//        peopleData.remove(url)
-//    }
-//    private fun mapProducts(personServerList: List<PersonServerModel>): List<DomainPersonModel> {
-//        return personServerList.map {
-//            DataPerson(it, peopleData.contains(it.url)).toDomainPersonModel()
-//        }
-//    }
-//}
+class FakeRepository : StarWarsRepository {
+
+    var peopleData: LinkedHashMap<String, Person> = LinkedHashMap()
+    private val observablePeopleList = MutableLiveData<Result<List<Person>>>()
+    private var shouldReturnError = false
+
+    fun setReturnError(value: Boolean) {
+        shouldReturnError = value
+    }
+
+    fun setPeopleData(list: List<Person>) {
+        for (item in list) {
+            peopleData[item.url] = item
+        }
+        runBlocking { refreshPersonList() }
+    }
+
+    override fun observePersonList(): LiveData<Result<List<Person>>> {
+        return observablePeopleList
+    }
+
+    override suspend fun getPersonList(forceUpdate: Boolean): Result<List<Person>> {
+        if (shouldReturnError) {
+            return Result.Error(Exception("Test exception"))
+        }
+        return Result.Success(peopleData.values.toList())
+    }
+
+    override suspend fun refreshPersonList() {
+        observablePeopleList.value = getPersonList()
+    }
+
+    override suspend fun getPerson(url: String, forceUpdate: Boolean): Result<Person> {
+        if (shouldReturnError) {
+            return Result.Error(Exception("Test exception"))
+        }
+        peopleData[url]?.let {
+            return Result.Success(it)
+        }
+        return Result.Error(Exception("Could not find person"))
+    }
+
+    override suspend fun makeFavorite(person: Person) {
+        val favPerson = person.copy(isfavorite = true)
+        peopleData[person.url] = favPerson
+        refreshPersonList()
+    }
+
+    override suspend fun deleteFromFavorite(person: Person) {
+        val delPerson = person.copy(isfavorite = false)
+        peopleData[person.url] = delPerson
+        refreshPersonList()
+    }
+
+    override suspend fun clearFavorites() {
+        peopleData = peopleData.filterValues {
+            !it.isfavorite
+        } as LinkedHashMap<String, Person>
+
+    }
+
+    override fun observePerson(url: String): LiveData<Result<Person>> {
+        return observablePeopleList.map { result ->
+            when (result) {
+                is Result.Loading -> Result.Loading
+                is Result.Error -> Result.Error(result.exception)
+                is Result.Success -> {
+                    val task = result.data.firstOrNull { it.url == url }
+                        ?: return@map Result.Error(Exception("Not found"))
+                    Result.Success(task)
+                }
+            }
+        }
+    }
+}

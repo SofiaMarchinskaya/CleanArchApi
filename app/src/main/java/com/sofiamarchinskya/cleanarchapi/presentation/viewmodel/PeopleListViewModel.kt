@@ -3,22 +3,23 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
+import com.sofiamarchinskya.cleanarchapi.app.Event
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import com.sofiamarchinskya.cleanarchapi.presentation.SingleLiveEvent
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
 import kotlinx.coroutines.launch
-import kotlin.Exception
 
-class PeopleListViewModel(private val repository: StarWarsRepository) : ViewModel() {
+class PeopleListViewModel(
+    private val repository: StarWarsRepository
+) : ViewModel() {
     private val update = MutableLiveData(false)
     private val _items: LiveData<List<Person>> = update.switchMap { forceUpdate ->
         if (forceUpdate) {
-            viewModelScope.launch {
+            viewModelScope.launch{
                 try {
                     repository.refreshPersonList()
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     showSnackbarMessage(R.string.loading_error)
                 }
             }
@@ -27,15 +28,16 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
     }
     val items: LiveData<List<Person>> = _items
 
-
     private val _currentFilteringLabel = MutableLiveData<Int>()
     val currentFilteringLabel: LiveData<Int> = _currentFilteringLabel
 
-    val snackbarText = SingleLiveEvent<Int>()
+    private val _snackbarText = MutableLiveData<Event<Int>>()
+    val snackbarText: LiveData<Event<Int>> = _snackbarText
 
     private var currentFiltering = FilterType.ALL_PEOPLE
 
-    val openPersonDetailsEvent = SingleLiveEvent<String>()
+    private val _openPersonDetailsEvent = MutableLiveData<Event<String>>()
+    val openPersonDetailsEvent: LiveData<Event<String>> = _openPersonDetailsEvent
 
     init {
         setFiltering(FilterType.ALL_PEOPLE)
@@ -92,11 +94,11 @@ class PeopleListViewModel(private val repository: StarWarsRepository) : ViewMode
     }
 
     fun openPersonDetails(url: String) {
-        openPersonDetailsEvent.value = url
+        _openPersonDetailsEvent.value = Event(url)
     }
 
     private fun showSnackbarMessage(message: Int) {
-        snackbarText.value = message
+        _snackbarText.value = Event(message)
     }
 
     private fun filterList(personListResult: Result<List<Person>>): LiveData<List<Person>> {

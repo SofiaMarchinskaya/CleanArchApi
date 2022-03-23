@@ -2,20 +2,23 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.sofiamarchinskya.cleanarchapi.MainCoroutineRule
 import com.sofiamarchinskya.cleanarchapi.R
+import com.sofiamarchinskya.cleanarchapi.app.Event
+import com.sofiamarchinskya.cleanarchapi.data.FakeRepository
 import com.sofiamarchinskya.cleanarchapi.data.Person
-import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import com.sofiamarchinskya.cleanarchapi.getOrAwaitValue
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 import org.mockito.kotlin.mock
 
-
+@ExperimentalCoroutinesApi
 class PeopleListViewModelTest {
-    private lateinit var repository: StarWarsRepository
+    private var repository = FakeRepository()
     private lateinit var viewModel: PeopleListViewModel
     private lateinit var filteringLabelObserver: Observer<Int>
     private var list = mutableListOf<Person>()
@@ -59,29 +62,112 @@ class PeopleListViewModelTest {
         isfavorite = true
     )
 
-    @Rule
-    var rule: TestRule = InstantTaskExecutorRule()
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
-    fun setup()  {
-        repository = mock()
+    fun setup() {
         list.add(person1)
         list.add(person2)
         list.add(person3)
+        repository.setPeopleData(list)
         filteringLabelObserver = mock()
         viewModel = PeopleListViewModel(repository)
         viewModel.currentFilteringLabel.observeForever(filteringLabelObserver)
     }
 
     @Test
-    fun filterList() {
+    fun `choose favorite filter`() {
         viewModel.setFiltering(FilterType.FAVORITES)
-        viewModel.currentFilteringLabel.observeForever{label->
+        viewModel.currentFilteringLabel.observeForever { label ->
+            assertEquals(label, R.string.fav_label)
+        }
+    }
+
+    @Test
+    fun `choose all filter`() {
+        viewModel.setFiltering(FilterType.ALL_PEOPLE)
+        viewModel.currentFilteringLabel.observeForever { label ->
             assertEquals(label, R.string.all_label)
         }
     }
+
     @Test
-    fun ass(){
-        assertEquals(1+1,2)
+    fun `choose not marked filter`() {
+        viewModel.setFiltering(FilterType.NOT_FAVORITE)
+        viewModel.currentFilteringLabel.observeForever { label ->
+            assertEquals(label, R.string.not_fav_label)
+        }
+    }
+
+    @Test
+    fun `clear favorites, items with property isfavorite = true removed`() {
+        viewModel.clearFavorites()
+        viewModel.items.observeForever { item ->
+            assertEquals(item, list.filter { !it.isfavorite })
+        }
+    }
+
+    @Test
+    fun `add person to favorites`() {
+        val person3 = Person(
+            name = "name3",
+            height = 1132,
+            url = "url3",
+            mass = 2233,
+            hair_color = "hair_color3",
+            skin_color = "skin_color3",
+            eye_color = "eye_color3",
+            birth_year = "birth_year3",
+            gender = "gender3",
+            homeworld = "homeworld3",
+            isfavorite = true
+        )
+
+        viewModel.addFavorites(person3, true)
+        assertEquals(
+            repository.peopleData[person3.url]?.isfavorite, true
+        )
+
+        val snackbarText = viewModel.snackbarText.getOrAwaitValue()
+        assertEquals(snackbarText.getContentIfNotHandled(), R.string.add_to_favorites)
+    }
+
+    @Test
+    fun `remove person from favorites`() {
+        val person3 = Person(
+            name = "name3",
+            height = 1132,
+            url = "url3",
+            mass = 2233,
+            hair_color = "hair_color3",
+            skin_color = "skin_color3",
+            eye_color = "eye_color3",
+            birth_year = "birth_year3",
+            gender = "gender3",
+            homeworld = "homeworld3",
+            isfavorite = true
+        )
+
+        viewModel.addFavorites(person3, false)
+
+        assertEquals(
+            repository.peopleData[person3.url]?.isfavorite == false,
+            true
+        )
+        val snackbarText: Event<Int> = viewModel.snackbarText.getOrAwaitValue()
+        assertEquals(snackbarText.getContentIfNotHandled(), R.string.remove_from_favorite)
+    }
+
+    @Test
+    fun `error while downloading list`() {
+        repository.setReturnError(true)
+        viewModel.items.observeForever {}
+        val snackbarText: Event<Int> = viewModel.snackbarText.getOrAwaitValue()
+        assertEquals(snackbarText.getContentIfNotHandled(), R.string.loading_error)
     }
 }
