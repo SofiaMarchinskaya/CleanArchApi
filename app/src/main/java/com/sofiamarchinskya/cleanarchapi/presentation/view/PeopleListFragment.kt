@@ -1,6 +1,7 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
@@ -43,8 +44,9 @@ class PeopleListFragment : Fragment() {
         setHasOptionsMenu(true)
         peopleAdapter = PeopleListAdapter(viewModel::openPersonDetails, viewModel::addFavorites)
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel._items.collect {
+            viewModel.items.collect {
                 peopleAdapter.update(it)
+                Log.d("Бык","Сколлектился")
             }
         }
         binding.personList.adapter = peopleAdapter

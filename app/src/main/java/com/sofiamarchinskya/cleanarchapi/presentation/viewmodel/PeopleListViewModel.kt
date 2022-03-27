@@ -1,5 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,24 +19,25 @@ class PeopleListViewModel(
     private val eventChannel = Channel<PeopleListEvent>(Channel.BUFFERED)
     val eventsFlow = eventChannel.receiveAsFlow()
     private val update = MutableStateFlow(false)
-    val _items: Flow<List<Person>> = update.flatMapLatest { forceUpdate ->
-        if (forceUpdate) {
-            viewModelScope.launch {
-                try {
-                    repository.refreshPersonList()
-                } catch (e: Exception) {
-                    showSnackbarMessage(R.string.loading_error)
-                }
-            }
-        }
-        repository.observePersonList().flatMapLatest { filterList(it) }
-    }
+    val items: Flow<List<Person>> = updateList(true)
 
     private var currentFiltering = FilterType.ALL_PEOPLE
 
     init {
         setFiltering(FilterType.ALL_PEOPLE)
-        loadPersonList(true)
+    }
+
+    private fun updateList(refresh: Boolean): Flow<List<Person>> {
+        viewModelScope.launch {
+            if (refresh) {
+                try {
+                    return@launch repository.refreshPersonList()
+                } catch (e: Exception) {
+                    showSnackbarMessage(R.string.loading_error)
+                }
+            }
+        }
+        return repository.observePersonList().flatMapLatest { filterList(it) }
     }
 
     fun setFiltering(requestType: FilterType) {
@@ -57,12 +59,9 @@ class PeopleListViewModel(
                 )
             }
         }
-        loadPersonList(false)
+        updateList(false)
     }
 
-    private fun loadPersonList(forceUpdate: Boolean) {
-        update.value = forceUpdate
-    }
 
     private fun setFilter(
         @StringRes filteringLabelString: Int
@@ -103,7 +102,7 @@ class PeopleListViewModel(
 
     private fun filterList(personListResult: Result<List<Person>>): Flow<List<Person>> {
         return if (personListResult is Result.Success) {
-            filterItems(personListResult.data, currentFiltering)
+            flowOf(filterItems(personListResult.data, currentFiltering))
         } else {
             showSnackbarMessage(R.string.loading_error)
             flowOf(emptyList())
@@ -113,11 +112,12 @@ class PeopleListViewModel(
     private fun filterItems(
         personList: List<Person>,
         filteringType: FilterType
-    ): Flow<List<Person>> {
+    ): List<Person> {
+        val list = ArrayList(personList)
         return when (filteringType) {
-            FilterType.ALL_PEOPLE -> flowOf(personList)
-            FilterType.FAVORITES -> flowOf(personList.filter { it.isfavorite })
-            FilterType.NOT_FAVORITE -> flowOf(personList.filter { !it.isfavorite })
+            FilterType.ALL_PEOPLE -> list
+            FilterType.FAVORITES -> list.filter { it.isfavorite }
+            FilterType.NOT_FAVORITE -> list.filter { !it.isfavorite }
         }
     }
 }
