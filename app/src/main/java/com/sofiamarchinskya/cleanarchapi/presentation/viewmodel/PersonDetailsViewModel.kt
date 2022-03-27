@@ -1,28 +1,25 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 
-import androidx.annotation.StringRes
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.Event
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewModel() {
 
-    private val _url = MutableLiveData<String>()
+    private val _url = MutableStateFlow<String?>(null)
+    private val eventChannel = Channel<PersonDetailsEvent>(Channel.BUFFERED)
+    val eventsFlow = eventChannel.receiveAsFlow()
 
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
-
-    private val _person = _url.switchMap { url ->
-        repository.observePerson(url).map { computeResult(it) }
+    val person: Flow<Person?> = _url.flatMapLatest { url ->
+        repository.observePerson(url!!).map { person -> computeResult(person) }
     }
-
-    val person: LiveData<Person?> = _person
-
     fun start(url: String) {
         if (url == _url.value) {
             return
@@ -39,17 +36,21 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
     }
 
     fun addFavorites(isFavorite: Boolean) = viewModelScope.launch {
-        val person = _person.value ?: return@launch
-        if (isFavorite) {
-            repository.makeFavorite(person)
-            showSnackbarMessage(R.string.add_to_favorites)
-        } else {
-            repository.deleteFromFavorite(person)
-            showSnackbarMessage(R.string.remove_from_favorite)
+        person.collect { person ->
+            person?.let {
+                if (isFavorite) {
+                    repository.makeFavorite(person)
+                    eventChannel.send(PersonDetailsEvent.ShowSnackBar(R.string.add_to_favorites))
+                } else {
+                    repository.deleteFromFavorite(person)
+                    eventChannel.send(PersonDetailsEvent.ShowSnackBar(R.string.remove_from_favorite))
+                }
+            }
         }
     }
+}
 
-    private fun showSnackbarMessage(@StringRes message: Int) {
-        _snackbarText.value = Event(message)
-    }
+sealed class PersonDetailsEvent {
+    data class ShowSnackBar(val res: Int) : PersonDetailsEvent()
+    data class CheckBoxState(val state: Boolean) : PersonDetailsEvent()
 }

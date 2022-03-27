@@ -7,6 +7,8 @@ import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -15,7 +17,7 @@ class PersonStorageImpl @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PersonStorage {
 
-    override fun observePersonList(): LiveData<Result<List<Person>>> {
+    override fun observePersonList(): Flow<Result<List<Person>>> {
         return dao.observePeople().map {
             Result.Success(it)
         }
@@ -43,7 +45,7 @@ class PersonStorageImpl @Inject constructor(
         dao.updateFavorites(person.url, false)
     }
 
-    override fun observePersonById(url: String): LiveData<Result<Person>> {
+    override fun observePersonById(url: String): Flow<Result<Person>> {
         return dao.observePersonById(url).map {
             Result.Success(it)
         }

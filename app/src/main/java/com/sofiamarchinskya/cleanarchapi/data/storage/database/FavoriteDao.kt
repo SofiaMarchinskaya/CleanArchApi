@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface FavoriteDao {
 
     @Query("SELECT * FROM favorite")
-    fun observePeople(): LiveData<List<Person>>
+    fun observePeople(): Flow<List<Person>>
 
     @Query("SELECT * FROM favorite")
     suspend fun getPeople(): List<Person>
@@ -18,7 +18,7 @@ interface FavoriteDao {
     suspend fun getPersonById(url: String):Person?
 
     @Query("SELECT * FROM favorite WHERE url = :url")
-    fun observePersonById(url: String): LiveData<Person>
+    fun observePersonById(url: String): Flow<Person>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPerson(person: Person)

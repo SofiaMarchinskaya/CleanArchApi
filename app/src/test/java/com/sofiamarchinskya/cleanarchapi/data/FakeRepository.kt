@@ -38,16 +38,6 @@ class FakeRepository : StarWarsRepository {
         observablePeopleList.value = getPersonList()
     }
 
-    override suspend fun getPerson(url: String, forceUpdate: Boolean): Result<Person> {
-        if (shouldReturnError) {
-            return Result.Error(Exception("Test exception"))
-        }
-        peopleData[url]?.let {
-            return Result.Success(it)
-        }
-        return Result.Error(Exception("Could not find person"))
-    }
-
     override suspend fun makeFavorite(person: Person) {
         val favPerson = person.copy(isfavorite = true)
         peopleData[person.url] = favPerson

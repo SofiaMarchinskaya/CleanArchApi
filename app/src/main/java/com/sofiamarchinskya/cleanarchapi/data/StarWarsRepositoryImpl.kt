@@ -1,9 +1,9 @@
 package com.sofiamarchinskya.cleanarchapi.data
 
-import androidx.lifecycle.LiveData
 import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StarWarsRepositoryImpl @Inject constructor(
@@ -11,7 +11,7 @@ class StarWarsRepositoryImpl @Inject constructor(
     private val storage: PersonStorage
 ) : StarWarsRepository {
 
-    override fun observePersonList(): LiveData<Result<List<Person>>> {
+    override fun observePersonList(): Flow<Result<List<Person>>> {
         return storage.observePersonList()
     }
 
@@ -50,7 +50,7 @@ class StarWarsRepositoryImpl @Inject constructor(
         storage.clearFavorites()
     }
 
-    override fun observePerson(url: String): LiveData<Result<Person>> {
+    override fun observePerson(url: String): Flow<Result<Person>> {
         return storage.observePersonById(url)
     }
 }
