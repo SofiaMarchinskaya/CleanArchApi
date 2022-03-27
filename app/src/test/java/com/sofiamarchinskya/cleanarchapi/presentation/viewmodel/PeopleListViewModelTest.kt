@@ -83,7 +83,7 @@ class PeopleListViewModelTest {
     @Test
     fun `choose all filter`() {
         viewModel.setFiltering(FilterType.ALL_PEOPLE)
-        assertEquals(viewModel.currentFilteringLabel.value, R.string.all_label)
+        assertEquals(viewModel.eventsFlow., R.string.all_label)
 
     }
 

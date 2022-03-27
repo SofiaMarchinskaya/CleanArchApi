@@ -15,7 +15,7 @@ interface PersonStorage {
 
     suspend fun deleteFromFavorites(person: Person)
 
-    fun observePersonById(url: String): Flow<Result<Person>>
+    suspend fun getPersonById(url: String): Result<Person>
 
     suspend fun clearFavorites()
 

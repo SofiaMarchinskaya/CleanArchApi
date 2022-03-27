@@ -45,11 +45,14 @@ class PersonStorageImpl @Inject constructor(
         dao.updateFavorites(person.url, false)
     }
 
-    override fun observePersonById(url: String): Flow<Result<Person>> {
-        return dao.observePersonById(url).map {
-            Result.Success(it)
+    override suspend fun getPersonById(url: String): Result<Person>  =
+        withContext(ioDispatcher) {
+            return@withContext try {
+                Result.Success(dao.getPersonById(url))
+            } catch (e: Exception) {
+                Result.Error(e)
+            }
         }
-    }
 
     override suspend fun clearFavorites() = withContext<Unit>(ioDispatcher) {
         dao.deleteFavorites()

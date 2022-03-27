@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -45,11 +44,10 @@ class PersonDetailsFragment : Fragment() {
         (requireActivity().applicationContext as App).appComponent.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory)[PersonDetailsViewModel::class.java]
         binding = FragmentPersonDetailsBinding.inflate(inflater, container, false)
-        val args = arguments?.getString(Constants.PERSON_URL)
-
-        if (args != null) {
-            viewModel.start(args)
+        arguments?.getString(Constants.PERSON_URL)?.let {
+            viewModel.loadPerson(it)
         }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.person.collect {
                 binding.apply {
@@ -66,18 +64,18 @@ class PersonDetailsFragment : Fragment() {
             }
         }
 
+        binding.checkBox.setOnCheckedChangeListener { _, flag ->
+            viewModel.addFavorites(flag)
+        }
+
         viewModel.eventsFlow.flowWithLifecycle(
             viewLifecycleOwner.lifecycle,
             Lifecycle.State.STARTED
         ).onEach {
-            when(it) {
+            when (it) {
                 is PersonDetailsEvent.ShowSnackBar -> showSnackBar(getString(it.res))
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-        binding.checkBox.setOnClickListener {
-            viewModel.addFavorites((it as CheckBox).isChecked)
-        }
         return binding.root
     }
 
