@@ -1,43 +1,47 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
-import android.util.Log
 import androidx.annotation.StringRes
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import com.sofiamarchinskya.cleanarchapi.presentation.Event
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class PeopleListViewModel(
     private val repository: StarWarsRepository
 ) : ViewModel() {
-    private val eventChannel = Channel<PeopleListEvent>(Channel.BUFFERED)
-    val eventsFlow = eventChannel.receiveAsFlow()
-    private val update = MutableStateFlow(false)
-    val items: Flow<List<Person>> = updateList(true)
-
-    private var currentFiltering = FilterType.ALL_PEOPLE
-
-    init {
-        setFiltering(FilterType.ALL_PEOPLE)
-    }
-
-    private fun updateList(refresh: Boolean): Flow<List<Person>> {
-        viewModelScope.launch {
-            if (refresh) {
+    private val update = MutableLiveData(false)
+    private val _items: LiveData<List<Person>> = update.switchMap { forceUpdate ->
+        if (forceUpdate) {
+            viewModelScope.launch{
                 try {
-                    return@launch repository.refreshPersonList()
+                    repository.refreshPersonList()
                 } catch (e: Exception) {
                     showSnackbarMessage(R.string.loading_error)
                 }
             }
         }
-        return repository.observePersonList().flatMapLatest { filterList(it) }
+        repository.observePersonList().asLiveData().switchMap { filterList(it) }
+    }
+    val items: LiveData<List<Person>> = _items
+
+    private val _currentFilteringLabel = MutableLiveData<Int>()
+    val currentFilteringLabel: LiveData<Int> = _currentFilteringLabel
+
+    private val _snackbarText = MutableLiveData<Event<Int>>()
+    val snackbarText: LiveData<Event<Int>> = _snackbarText
+
+    private var currentFiltering = FilterType.ALL_PEOPLE
+
+    private val _openPersonDetailsEvent = MutableLiveData<Event<String>>()
+    val openPersonDetailsEvent: LiveData<Event<String>> = _openPersonDetailsEvent
+
+    init {
+        setFiltering(FilterType.ALL_PEOPLE)
+        loadPersonList(true)
     }
 
     fun setFiltering(requestType: FilterType) {
@@ -59,16 +63,17 @@ class PeopleListViewModel(
                 )
             }
         }
-        updateList(false)
+        loadPersonList(false)
     }
 
+    private fun loadPersonList(forceUpdate: Boolean) {
+        update.value = forceUpdate
+    }
 
     private fun setFilter(
         @StringRes filteringLabelString: Int
     ) {
-        viewModelScope.launch {
-            eventChannel.send(PeopleListEvent.ChangeFilteringLabel(filteringLabelString))
-        }
+        _currentFilteringLabel.value = filteringLabelString
     }
 
     fun clearFavorites() {
@@ -89,42 +94,44 @@ class PeopleListViewModel(
     }
 
     fun openPersonDetails(url: String) {
-        viewModelScope.launch {
-            eventChannel.send(PeopleListEvent.NavigateToPersonDetails(url))
-        }
+        _openPersonDetailsEvent.value = Event(url)
     }
 
     private fun showSnackbarMessage(message: Int) {
-        viewModelScope.launch {
-            eventChannel.send(PeopleListEvent.ShowSnackBar(message))
-        }
+        _snackbarText.value = Event(message)
     }
 
-    private fun filterList(personListResult: Result<List<Person>>): Flow<List<Person>> {
-        return if (personListResult is Result.Success) {
-            flowOf(filterItems(personListResult.data, currentFiltering))
+    private fun filterList(personListResult: Result<List<Person>>): LiveData<List<Person>> {
+
+        val result = MutableLiveData<List<Person>>()
+
+        if (personListResult is Result.Success) {
+            viewModelScope.launch {
+                result.value = filterItems(personListResult.data, currentFiltering)
+            }
         } else {
+            result.value = emptyList()
             showSnackbarMessage(R.string.loading_error)
-            flowOf(emptyList())
         }
+
+        return result
     }
 
-    private fun filterItems(
-        personList: List<Person>,
-        filteringType: FilterType
-    ): List<Person> {
-        val list = ArrayList(personList)
-        return when (filteringType) {
-            FilterType.ALL_PEOPLE -> list
-            FilterType.FAVORITES -> list.filter { it.isfavorite }
-            FilterType.NOT_FAVORITE -> list.filter { !it.isfavorite }
+    private fun filterItems(personList: List<Person>, filteringType: FilterType): List<Person> {
+        val listToShow = ArrayList<Person>()
+        for (person in personList) {
+            when (filteringType) {
+                FilterType.ALL_PEOPLE -> listToShow.add(person)
+                FilterType.FAVORITES -> if (person.isfavorite) {
+                    listToShow.add(person)
+                }
+                FilterType.NOT_FAVORITE -> if (!person.isfavorite) {
+                    listToShow.add(person)
+                }
+            }
         }
+        return listToShow
     }
 }
 
-sealed class PeopleListEvent {
-    data class NavigateToPersonDetails(val url: String) : PeopleListEvent()
-    data class ShowSnackBar(val res: Int) : PeopleListEvent()
-    data class ChangeFilteringLabel(val res: Int) : PeopleListEvent()
-}
 

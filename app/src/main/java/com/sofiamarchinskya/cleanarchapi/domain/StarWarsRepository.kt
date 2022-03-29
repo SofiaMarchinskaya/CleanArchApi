@@ -18,5 +18,5 @@ interface StarWarsRepository {
 
     suspend fun clearFavorites()
 
-    suspend fun getPersonByUrl(url: String):Result<Person>
+    fun observePerson(url: String): Flow<Result<Person>>
 }

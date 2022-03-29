@@ -3,19 +3,22 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sofiamarchinskya.cleanarchapi.MainCoroutineRule
 import com.sofiamarchinskya.cleanarchapi.R
-import com.sofiamarchinskya.cleanarchapi.data.FakeRepository
 import com.sofiamarchinskya.cleanarchapi.data.Person
+import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import com.sofiamarchinskya.cleanarchapi.getOrAwaitValue
+import com.sofiamarchinskya.cleanarchapi.presentation.Event
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
 class PeopleListViewModelTest {
-    private var repository = FakeRepository()
+    private lateinit var repository:StarWarsRepository
     private lateinit var viewModel: PeopleListViewModel
     private var list = mutableListOf<Person>()
     private val person1 = Person(
@@ -70,34 +73,39 @@ class PeopleListViewModelTest {
         list.add(person1)
         list.add(person2)
         list.add(person3)
-        repository.setPeopleData(list)
+        repository = mock()
         viewModel = PeopleListViewModel(repository)
     }
 
     @Test
     fun `choose favorite filter`() {
         viewModel.setFiltering(FilterType.FAVORITES)
-        assertEquals(viewModel.currentFilteringLabel.value, R.string.fav_label)
+        viewModel.currentFilteringLabel.observeForever { label ->
+            assertEquals(label, R.string.fav_label)
+        }
     }
 
     @Test
     fun `choose all filter`() {
         viewModel.setFiltering(FilterType.ALL_PEOPLE)
-        assertEquals(viewModel.eventsFlow., R.string.all_label)
-
+        viewModel.currentFilteringLabel.observeForever { label ->
+            assertEquals(label, R.string.all_label)
+        }
     }
 
     @Test
     fun `choose not marked filter`() {
         viewModel.setFiltering(FilterType.NOT_FAVORITE)
-        assertEquals(viewModel.currentFilteringLabel.value, R.string.not_fav_label)
+        viewModel.currentFilteringLabel.observeForever { label ->
+            assertEquals(label, R.string.not_fav_label)
+        }
     }
 
     @Test
     fun `clear favorites, items with property isfavorite = true removed`() {
         viewModel.clearFavorites()
-        viewModel.items.observeForever { personList ->
-            assertEquals(personList, list.filter { !it.isfavorite })
+        viewModel.items.observeForever { item ->
+            assertEquals(item, list.filter { !it.isfavorite })
         }
     }
 
@@ -118,10 +126,12 @@ class PeopleListViewModelTest {
         )
 
         viewModel.addFavorites(person3, true)
-        assertEquals(
-            repository.peopleData[person3.url]?.isfavorite, true
-        )
-        assertEquals(viewModel.snackbarText.value, R.string.add_to_favorites)
+//        assertEquals(
+//            repository.peopleData[person3.url]?.isfavorite, true
+//        )
+
+        val snackbarText = viewModel.snackbarText.getOrAwaitValue()
+        assertEquals(snackbarText.getContentIfNotHandled(), R.string.add_to_favorites)
     }
 
     @Test
@@ -142,17 +152,19 @@ class PeopleListViewModelTest {
 
         viewModel.addFavorites(person3, false)
 
-        assertEquals(
-            repository.peopleData[person3.url]?.isfavorite == false,
-            true
-        )
-        assertEquals(viewModel.snackbarText.value, R.string.remove_from_favorite)
+//        assertEquals(
+//          /  repository.peopleData[person3.url]?.isfavorite == false,
+//            true
+//        )
+        val snackbarText: Event<Int> = viewModel.snackbarText.getOrAwaitValue()
+        assertEquals(snackbarText.getContentIfNotHandled(), R.string.remove_from_favorite)
     }
 
     @Test
     fun `error while downloading list`() {
-        repository.setReturnError(true)
+       // repository.setReturnError(true)
         viewModel.items.observeForever {}
-        assertEquals(viewModel.snackbarText.value, R.string.loading_error)
+        val snackbarText: Event<Int> = viewModel.snackbarText.getOrAwaitValue()
+        assertEquals(snackbarText.getContentIfNotHandled(), R.string.loading_error)
     }
 }

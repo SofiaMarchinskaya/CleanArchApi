@@ -50,7 +50,8 @@ class StarWarsRepositoryImpl @Inject constructor(
         storage.clearFavorites()
     }
 
-    override suspend fun getPersonByUrl(url: String):Result<Person> {
-      return storage.getPersonById(url)
+    override fun observePerson(url: String): Flow<Result<Person>> {
+        return storage.observePersonById(url)
     }
 }
+

@@ -1,7 +1,5 @@
 package com.sofiamarchinskya.cleanarchapi.data.storage
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.FavoriteDao
@@ -45,14 +43,11 @@ class PersonStorageImpl @Inject constructor(
         dao.updateFavorites(person.url, false)
     }
 
-    override suspend fun getPersonById(url: String): Result<Person>  =
-        withContext(ioDispatcher) {
-            return@withContext try {
-                Result.Success(dao.getPersonById(url))
-            } catch (e: Exception) {
-                Result.Error(e)
-            }
+    override fun observePersonById(url: String): Flow<Result<Person>> {
+        return dao.observePersonById(url).map {
+            Result.Success(it)
         }
+    }
 
     override suspend fun clearFavorites() = withContext<Unit>(ioDispatcher) {
         dao.deleteFavorites()
