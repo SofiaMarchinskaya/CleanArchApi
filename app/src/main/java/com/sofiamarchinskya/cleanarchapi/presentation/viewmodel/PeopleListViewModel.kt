@@ -5,26 +5,26 @@ import androidx.lifecycle.*
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
-import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import com.sofiamarchinskya.cleanarchapi.domain.Interactor
 import com.sofiamarchinskya.cleanarchapi.presentation.Event
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
 import kotlinx.coroutines.launch
 
 class PeopleListViewModel(
-    private val repository: StarWarsRepository
+    private val interactor: Interactor
 ) : ViewModel() {
     private val update = MutableLiveData(false)
     private val _items: LiveData<List<Person>> = update.switchMap { forceUpdate ->
         if (forceUpdate) {
-            viewModelScope.launch{
+            viewModelScope.launch {
                 try {
-                    repository.refreshPersonList()
+                    interactor.refreshPersonList()
                 } catch (e: Exception) {
                     showSnackbarMessage(R.string.loading_error)
                 }
             }
         }
-        repository.observePersonList().asLiveData().switchMap { filterList(it) }
+        interactor.observePersonList().asLiveData().switchMap { filterList(it) }
     }
     val items: LiveData<List<Person>> = _items
 
@@ -78,19 +78,13 @@ class PeopleListViewModel(
 
     fun clearFavorites() {
         viewModelScope.launch {
-            repository.clearFavorites()
+            interactor.clearFavorites()
             showSnackbarMessage(R.string.clear_favorites)
         }
     }
 
     fun addFavorites(person: Person, isFavorite: Boolean) = viewModelScope.launch {
-        if (isFavorite) {
-            repository.makeFavorite(person)
-            showSnackbarMessage(R.string.add_to_favorites)
-        } else {
-            repository.deleteFromFavorite(person)
-            showSnackbarMessage(R.string.remove_from_favorite)
-        }
+        showSnackbarMessage(interactor.addFavorite(person, isFavorite))
     }
 
     fun openPersonDetails(url: String) {
