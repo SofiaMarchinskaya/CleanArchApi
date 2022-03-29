@@ -1,26 +1,34 @@
 package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.sofiamarchinskya.cleanarchapi.MainCoroutineRule
 import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.data.Person
+import com.sofiamarchinskya.cleanarchapi.data.Result
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import com.sofiamarchinskya.cleanarchapi.getOrAwaitValue
 import com.sofiamarchinskya.cleanarchapi.presentation.Event
 import com.sofiamarchinskya.cleanarchapi.presentation.view.FilterType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
 class PeopleListViewModelTest {
-    private lateinit var repository:StarWarsRepository
+    private lateinit var repository: StarWarsRepository
     private lateinit var viewModel: PeopleListViewModel
-    private var list = mutableListOf<Person>()
+    private val dispatcher = UnconfinedTestDispatcher()
+    private val scope = TestScope(dispatcher)
+    private var list = HashMap<String, Person>()
     private val person1 = Person(
         name = "name1",
         height = 111,
@@ -58,21 +66,23 @@ class PeopleListViewModelTest {
         birth_year = "birth_year3",
         gender = "gender3",
         homeworld = "homeworld3",
-        isfavorite = true
+        isfavorite = false
     )
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    @ExperimentalCoroutinesApi
-    @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
     @Before
     fun setup() {
-        list.add(person1)
-        list.add(person2)
-        list.add(person3)
+        Dispatchers.setMain(dispatcher)
+        list[person1.url] = person1
+        list[person2.url] = person2
+        list[person3.url] = person3
         repository = mock()
         viewModel = PeopleListViewModel(repository)
     }
@@ -102,40 +112,32 @@ class PeopleListViewModelTest {
     }
 
     @Test
-    fun `clear favorites, items with property isfavorite = true removed`() {
+    fun `clear favorites`() = scope.runTest {
+        Mockito.`when`(repository.observePersonList())
+            .doReturn(flowOf(Result.Success(ArrayList(list.values))))
+        Mockito.`when`(repository.clearFavorites())
+            .thenAnswer { list.values.map { it.isfavorite = false } }
         viewModel.clearFavorites()
-        viewModel.items.observeForever { item ->
-            assertEquals(item, list.filter { !it.isfavorite })
-        }
+        val personlist = viewModel.items.getOrAwaitValue()
+        assertEquals(personlist, ArrayList(list.values))
     }
 
     @Test
-    fun `add person to favorites`() {
-        val person3 = Person(
-            name = "name3",
-            height = 1132,
-            url = "url3",
-            mass = 2233,
-            hair_color = "hair_color3",
-            skin_color = "skin_color3",
-            eye_color = "eye_color3",
-            birth_year = "birth_year3",
-            gender = "gender3",
-            homeworld = "homeworld3",
-            isfavorite = true
-        )
-
+    fun `add person to favorites`() = scope.runTest {
+        Mockito.`when`(repository.makeFavorite(person3))
+            .doAnswer { list[person3.url]?.isfavorite = true }
         viewModel.addFavorites(person3, true)
-//        assertEquals(
-//            repository.peopleData[person3.url]?.isfavorite, true
-//        )
+        assertEquals(
+            list[person3.url]?.isfavorite,
+            true
+        )
 
         val snackbarText = viewModel.snackbarText.getOrAwaitValue()
         assertEquals(snackbarText.getContentIfNotHandled(), R.string.add_to_favorites)
     }
 
     @Test
-    fun `remove person from favorites`() {
+    fun `remove person from favorites`() = scope.runTest {
         val person3 = Person(
             name = "name3",
             height = 1132,
@@ -151,20 +153,14 @@ class PeopleListViewModelTest {
         )
 
         viewModel.addFavorites(person3, false)
+        Mockito.`when`(repository.makeFavorite(person3))
+            .doAnswer { list[person3.url]?.isfavorite = false }
 
-//        assertEquals(
-//          /  repository.peopleData[person3.url]?.isfavorite == false,
-//            true
-//        )
+        assertEquals(
+            list[person3.url]?.isfavorite,
+            false
+        )
         val snackbarText: Event<Int> = viewModel.snackbarText.getOrAwaitValue()
         assertEquals(snackbarText.getContentIfNotHandled(), R.string.remove_from_favorite)
-    }
-
-    @Test
-    fun `error while downloading list`() {
-       // repository.setReturnError(true)
-        viewModel.items.observeForever {}
-        val snackbarText: Event<Int> = viewModel.snackbarText.getOrAwaitValue()
-        assertEquals(snackbarText.getContentIfNotHandled(), R.string.loading_error)
     }
 }

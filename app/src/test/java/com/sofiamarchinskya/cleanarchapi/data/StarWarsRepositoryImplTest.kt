@@ -78,7 +78,6 @@ class StarWarsRepositoryImplTest {
         homeworld = "homeworld3"
     )
 
-    private val remoteData = listOf(personrem1, personrem2, personrem3)
     private val localData = listOf(person1, person2)
 
     private lateinit var remoteDataSource: StarWarsService
