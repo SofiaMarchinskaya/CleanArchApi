@@ -2,15 +2,13 @@ package com.sofiamarchinskya.cleanarchapi.presentation.viewmodel
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
-import com.sofiamarchinskya.cleanarchapi.R
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
-import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import com.sofiamarchinskya.cleanarchapi.domain.Interactor
 import com.sofiamarchinskya.cleanarchapi.presentation.Event
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewModel() {
+class PersonDetailsViewModel(private val interactor: Interactor) : ViewModel() {
 
     private val _url = MutableLiveData<String>()
 
@@ -18,7 +16,7 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
     val snackbarText: LiveData<Event<Int>> = _snackbarText
 
     private val _person = _url.switchMap { url ->
-        repository.observePerson(url).asLiveData().map { computeResult(it) }
+        interactor.observePerson(url).asLiveData().map { computeResult(it) }
     }
 
     val person: LiveData<Person?> = _person
@@ -39,14 +37,8 @@ class PersonDetailsViewModel(private val repository: StarWarsRepository) : ViewM
     }
 
     fun addFavorites(isFavorite: Boolean) = viewModelScope.launch {
-        val person = _person.value ?: return@launch
-        if (isFavorite) {
-            repository.makeFavorite(person)
-            showSnackbarMessage(R.string.add_to_favorites)
-        } else {
-            repository.deleteFromFavorite(person)
-            showSnackbarMessage(R.string.remove_from_favorite)
-        }
+        _person.value?.let { interactor.addFavorite(it, isFavorite) }
+            ?.let { showSnackbarMessage(it) }
     }
 
     private fun showSnackbarMessage(@StringRes message: Int) {

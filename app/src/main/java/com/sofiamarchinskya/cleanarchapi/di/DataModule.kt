@@ -27,8 +27,8 @@ class DataModule {
         PeopleListViewModelFactory(interactor)
 
     @Provides
-    fun providePersonDetailsViewModelFactory(repository: StarWarsRepository): PersonDetailsViewModelFactory =
-        PersonDetailsViewModelFactory(repository)
+    fun providePersonDetailsViewModelFactory(interactor: Interactor): PersonDetailsViewModelFactory =
+        PersonDetailsViewModelFactory(interactor)
 
     @Provides
     fun provideService(starWarsApi: StarWarsApi): StarWarsService = StarWarsServiceImpl(starWarsApi)

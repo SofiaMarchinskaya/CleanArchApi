@@ -15,10 +15,10 @@ class PeopleListViewModelFactory (val interactor: Interactor) : ViewModelProvide
     }
 }
 
-class PersonDetailsViewModelFactory(val repository: StarWarsRepository) :
+class PersonDetailsViewModelFactory(val interactor: Interactor) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return PersonDetailsViewModel(repository) as T
+        return PersonDetailsViewModel(interactor) as T
     }
 }
