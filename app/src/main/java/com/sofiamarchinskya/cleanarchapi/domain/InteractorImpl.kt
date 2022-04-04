@@ -6,7 +6,7 @@ import com.sofiamarchinskya.cleanarchapi.data.Result
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class InteractorImpl(private val repository: StarWarsRepository) : Interactor {
+class InteractorImpl @Inject constructor(private val repository: StarWarsRepository) : Interactor {
 
     override fun observePersonList(): Flow<Result<List<Person>>> {
         return repository.observePersonList()

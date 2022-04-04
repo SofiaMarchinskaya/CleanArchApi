@@ -6,9 +6,7 @@ import com.sofiamarchinskya.cleanarchapi.di.AppModule
 import com.sofiamarchinskya.cleanarchapi.di.DaggerAppComponent
 
 class App : Application() {
-    lateinit var appComponent: AppComponent
-    override fun onCreate() {
-        super.onCreate()
-        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.factory().create(applicationContext)
     }
 }
