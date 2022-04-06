@@ -7,23 +7,19 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sofiamarchinskya.cleanarchapi.app.App
 import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPersonDetailsBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.EventObserver
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModel
-import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PersonDetailsViewModelFactory
 import com.sofiamarchinskya.cleanarchapi.utils.Constants
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PersonDetailsFragment : Fragment() {
     private lateinit var binding: FragmentPersonDetailsBinding
-    private lateinit var viewModel: PersonDetailsViewModel
 
-    @Inject
-    lateinit var viewModelFactory: PersonDetailsViewModelFactory
+    private val viewModel: PersonDetailsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +32,6 @@ class PersonDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (requireActivity().applicationContext as App).appComponent.inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory)[PersonDetailsViewModel::class.java]
         binding = FragmentPersonDetailsBinding.inflate(inflater, container, false)
         val args = arguments?.getString(Constants.PERSON_URL)
 

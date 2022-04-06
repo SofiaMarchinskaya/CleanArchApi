@@ -5,7 +5,6 @@ import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sofiamarchinskya.cleanarchapi.R
@@ -14,25 +13,18 @@ import com.sofiamarchinskya.cleanarchapi.databinding.FragmentPeopleListBinding
 import com.sofiamarchinskya.cleanarchapi.presentation.EventObserver
 import com.sofiamarchinskya.cleanarchapi.presentation.view.adapter.PeopleListAdapter
 import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModel
-import com.sofiamarchinskya.cleanarchapi.presentation.viewmodel.PeopleListViewModelFactory
 import com.sofiamarchinskya.cleanarchapi.utils.Constants
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PeopleListFragment : Fragment() {
     private lateinit var binding: FragmentPeopleListBinding
     private lateinit var peopleAdapter: PeopleListAdapter
-    private lateinit var viewModel: PeopleListViewModel
-
-    @Inject
-    lateinit var viewModelFactory: PeopleListViewModelFactory
+    private val viewModel: PeopleListViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (requireActivity().applicationContext as App).appComponent.inject(this)
-        viewModel =
-            ViewModelProvider(this, viewModelFactory)[PeopleListViewModel::class.java]
         peopleAdapter = PeopleListAdapter(viewModel::openPersonDetails, viewModel::addFavorites)
         binding = FragmentPeopleListBinding.inflate(layoutInflater, container, false)
         setHasOptionsMenu(true)

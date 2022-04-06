@@ -2,13 +2,8 @@ package com.sofiamarchinskya.cleanarchapi.di
 
 import com.sofiamarchinskya.cleanarchapi.domain.Interactor
 import com.sofiamarchinskya.cleanarchapi.domain.InteractorImpl
-import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
+import org.koin.dsl.module
 
-@Module
-abstract class DomainModule {
-    @Binds
-    abstract fun provideInteractor(interactorImpl: InteractorImpl): Interactor
+val domainModule = module {
+    factory<Interactor> { InteractorImpl(get()) }
 }

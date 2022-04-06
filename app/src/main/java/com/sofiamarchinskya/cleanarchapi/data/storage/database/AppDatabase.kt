@@ -3,7 +3,6 @@ package com.sofiamarchinskya.cleanarchapi.data.storage.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.sofiamarchinskya.cleanarchapi.data.Person
-import javax.inject.Singleton
 
 @Database(
     entities = [

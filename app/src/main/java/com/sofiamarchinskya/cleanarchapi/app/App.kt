@@ -1,12 +1,16 @@
 package com.sofiamarchinskya.cleanarchapi.app
 
 import android.app.Application
-import com.sofiamarchinskya.cleanarchapi.di.AppComponent
-import com.sofiamarchinskya.cleanarchapi.di.AppModule
-import com.sofiamarchinskya.cleanarchapi.di.DaggerAppComponent
+import com.sofiamarchinskya.cleanarchapi.di.*
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
-    val appComponent: AppComponent by lazy {
-        DaggerAppComponent.factory().create(applicationContext)
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidContext(this@App)
+            modules(listOf(appModule, viewModelModule, dataModule, networkModule, domainModule))
+        }
     }
 }

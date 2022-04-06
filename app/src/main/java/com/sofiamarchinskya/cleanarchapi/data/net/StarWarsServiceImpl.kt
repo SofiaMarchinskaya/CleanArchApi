@@ -1,13 +1,10 @@
 package com.sofiamarchinskya.cleanarchapi.data.net
 
-import android.util.Log
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
-import javax.inject.Inject
 
-class StarWarsServiceImpl @Inject constructor(private val starWarsApi: StarWarsApi) :
+class StarWarsServiceImpl(private val starWarsApi: StarWarsApi) :
     StarWarsService {
-
     override suspend fun getPersonList(): Result<List<Person>> {
         try {
             val response = starWarsApi.getPeople()

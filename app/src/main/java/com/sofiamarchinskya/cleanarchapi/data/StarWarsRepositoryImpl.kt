@@ -4,9 +4,8 @@ import com.sofiamarchinskya.cleanarchapi.data.net.StarWarsService
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class StarWarsRepositoryImpl @Inject constructor(
+class StarWarsRepositoryImpl(
     private val starWarsService: StarWarsService,
     private val storage: PersonStorage
 ) : StarWarsRepository {
