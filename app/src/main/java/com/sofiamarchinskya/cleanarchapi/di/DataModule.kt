@@ -10,6 +10,7 @@ import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 
 @Module
 abstract class DataModule {
@@ -19,7 +20,12 @@ abstract class DataModule {
     ): StarWarsRepository
 
     @Binds
+    //@Named("StarWarsService")
     abstract fun provideService(starWarsApi: StarWarsServiceImpl): StarWarsService
+//пример использования @Named
+//    @Binds
+//    //@Named("AnotherStarWarsService")
+//    abstract fun provideService(anotherApi: AnotherStarWarsServiceImpl): StarWarsService
 }
 
 @Module

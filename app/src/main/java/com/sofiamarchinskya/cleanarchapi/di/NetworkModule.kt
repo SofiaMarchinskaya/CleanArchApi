@@ -19,6 +19,6 @@ class NetworkModule {
 
     companion object {
         private const val BASE_URL =
-            "http://swapi.dev/api/"
+            "https://swapi.dev/api/"
     }
 }

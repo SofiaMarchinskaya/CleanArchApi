@@ -1,5 +1,6 @@
 package com.sofiamarchinskya.cleanarchapi.data.net
 
+import android.util.Log
 import com.sofiamarchinskya.cleanarchapi.data.Person
 import com.sofiamarchinskya.cleanarchapi.data.Result
 import javax.inject.Inject
