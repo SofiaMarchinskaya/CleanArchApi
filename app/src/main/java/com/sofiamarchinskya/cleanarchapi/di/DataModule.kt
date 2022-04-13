@@ -6,6 +6,7 @@ import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorage
 import com.sofiamarchinskya.cleanarchapi.data.storage.PersonStorageImpl
 import com.sofiamarchinskya.cleanarchapi.data.storage.database.AppDatabase
 import com.sofiamarchinskya.cleanarchapi.domain.StarWarsRepository
+import com.sofiamarchinskya.cleanarchapi.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -19,8 +20,9 @@ val dataModule = module {
         Room.databaseBuilder(
             androidContext().applicationContext,
             AppDatabase::class.java,
-            "favorite-db"
+            Constants.DATABASE_NAME
         ).build()
     }
+
     single { get<AppDatabase>().favoriteDao }
 }
